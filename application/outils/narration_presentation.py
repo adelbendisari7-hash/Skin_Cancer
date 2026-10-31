@@ -17,7 +17,7 @@ SORTIE = Path(__file__).resolve().parent.parent / "docs" / "video" / "voix"
 
 SCENES = {
     "intro": "Face à une lésion cutanée, le médecin doit décider vite : surveiller, ou adresser à un spécialiste. "
-             "DermIA Prudence l'aide à faire ce tri, sans jamais décider à sa place.",
+             "dermIA l'aide à faire ce tri, sans jamais décider à sa place.",
     "connexion": "L'outil s'ouvre dans un simple navigateur, en français, en anglais ou en arabe.",
     "file": "Le médecin retrouve d'abord sa file de travail. Les cas les plus graves sont en tête, et un badge signale "
             "les lésions qui ont changé depuis le dernier examen.",
@@ -43,8 +43,7 @@ SCENES = {
                 "modèle, quatre-vingt-douze pour cent des mélanomes sont signalés, au prix d'une fausse alerte pour près "
                 "d'une lésion non mélanome sur quatre.",
     "fin": "Cette version est une démonstration. Ce n'est pas un dispositif médical, et son modèle, entraîné sur des "
-           "données à usage non commercial, devra être réentraîné et validé cliniquement avant tout usage réel. "
-           "Pour la découvrir : dermia-prudence point vercel point app.",
+           "données à usage non commercial, devra être réentraîné et validé cliniquement avant tout usage réel.",
 }
 
 

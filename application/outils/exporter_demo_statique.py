@@ -53,8 +53,9 @@ def main() -> None:
     from dermia.main import app
     from dermia.pdf import compte_rendu_pdf
 
-    if SORTIE.exists():
-        shutil.rmtree(SORTIE)
+    # modele/ vient de src/export_onnx.py : seul le contenu de l'instantané est remplacé
+    for dossier in ("images", "pdf"):
+        shutil.rmtree(SORTIE / dossier, ignore_errors=True)
     (SORTIE / "images").mkdir(parents=True)
     (SORTIE / "pdf").mkdir()
 
@@ -95,7 +96,7 @@ def main() -> None:
             "lesions": lesions, "details": details, "etsi": etsi, "fiche": c.get("/api/modele").json(),
             "parametres": c.get("/api/parametres").json(), "utilisateurs": c.get("/api/utilisateurs").json(),
             "journal": journal, "recalibrage": c.get("/api/recalibrage").json(),
-            "sauvegardes": c.get("/api/sauvegardes").json(), "pdf": presentes,
+            "sauvegardes": [{k: v for k, v in x.items() if k != "application"} for x in c.get("/api/sauvegardes").json()], "pdf": presentes,
         }
 
         with SessionLocal() as s:

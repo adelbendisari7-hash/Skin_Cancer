@@ -1,7 +1,7 @@
-# DermIA Prudence — application locale d'aide au triage des lésions cutanées
+# dermIA — application locale d'aide au triage des lésions cutanées
 
-*« DermIA Prudence » est un nom de travail : choisissez votre nom commercial (et vérifiez qu'il n'est pas déjà déposé),
-puis changez-le via la variable `DERMIA_NOM` et dans `frontend/index.html`.*
+*Avant toute commercialisation, vérifiez que le nom « dermIA » est libre. Pour le changer : variable `DERMIA_NOM` et
+`frontend/index.html`.*
 
 Le médecin envoie une image dermoscopique, indique le patient (pseudonymisé) et la localisation de la lésion.
 L'IA propose une orientation — **suspicion de mélanome**, **avis spécialisé**, **bénin probable** ou **renvoi au
@@ -164,7 +164,7 @@ cd ..; .venv\Scripts\python -m src.export_v2
 
 | Variable | Rôle | Défaut |
 |---|---|---|
-| `DERMIA_NOM` | nom du produit affiché | DermIA Prudence |
+| `DERMIA_NOM` | nom du produit affiché | dermIA |
 | `DERMIA_DONNEES` | dossier des données | `application/donnees` |
 | `DERMIA_MODELE` | paquet de modèle à charger | `modeles/ham10000-m5-v2` |
 | `DERMIA_SAUVEGARDE_AUTO` | `0` pour désactiver la sauvegarde quotidienne | 1 |

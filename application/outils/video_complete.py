@@ -89,7 +89,7 @@ def main() -> None:
         t = Tournage(page)
         attendre = lambda: page.wait_for_load_state("networkidle")        # noqa: E731
 
-        carte(page, "DermIA Prudence 2.0", "Visite complète de l'application",
+        carte(page, "dermIA 2.0", "Visite complète de l'application",
               "Suivi des lésions · critères ABCD · refus des images hors sujet · recalibrage local · "
               "sauvegarde en un clic · français, anglais et arabe — données de démonstration", 5)
 
@@ -247,7 +247,7 @@ def main() -> None:
         t.vers(page.get_by_role("heading", name="Images hors sujet"))
         t.legende("12", "Tout est mesuré et affiché", "Y compris ce que l'outil ne sait pas faire.", 3.2)
 
-        carte(page, "DermIA Prudence 2.0", "Démarrer : double-clic sur <b>lancer_application.bat</b>.<br>"
+        carte(page, "dermIA 2.0", "Démarrer : double-clic sur <b>lancer_application.bat</b>.<br>"
               "Démonstration : <b>lancer_demo.bat</b>.",
               "Outil d'aide à la décision, pas un dispositif médical. Modèle de démonstration entraîné sur HAM10000 "
               "(licence CC BY-NC 4.0) : usage non commercial.", 5)

@@ -179,7 +179,7 @@ def main() -> None:
 
         # Ouverture ----------------------------------------------------------------------------------
         page.wait_for_timeout(300)
-        carte(page, f"""{LOGO}<h1>DermIA Prudence</h1><p>Aide au tri des lésions cutanées</p>
+        carte(page, f"""{LOGO}<h1>dermIA</h1><p>Aide au tri des lésions cutanées</p>
             <p class="v" style="animation-delay:4.6s;margin-top:22px">L'outil oriente. Le médecin décide.</p>""")
         s.debut("intro")
         s.fin(0.7)
@@ -342,8 +342,7 @@ def main() -> None:
         carte(page, f"""{LOGO}<h1>Version de démonstration</h1>
             <p {retard(0.6)}>Pas un dispositif médical.</p>
             <p {retard(3.0)}>Modèle entraîné sur HAM10000 (CC BY-NC 4.0), à usage non commercial.</p>
-            <p {retard(5.6)}>Réentraînement et validation clinique requis avant tout usage réel.</p>
-            <p class="lien v" style="animation-delay:10.8s;margin-top:34px">dermia-prudence.vercel.app</p>""")
+            <p {retard(5.6)}>Réentraînement et validation clinique requis avant tout usage réel.</p>""")
         s.debut("fin")
         s.fin(1.6)
         video = page.video.path()

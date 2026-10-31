@@ -118,7 +118,7 @@ def main() -> None:
         page = ctx.new_page()
         t = Tournage(page)
 
-        carte(page, "DermIA Prudence", "Analyser une lésion cutanée, de la connexion au compte rendu",
+        carte(page, "dermIA", "Analyser une lésion cutanée, de la connexion au compte rendu",
               "Tutoriel de deux minutes, sur des données de démonstration", 4)
 
         # 1. Connexion ---------------------------------------------------------------------------
