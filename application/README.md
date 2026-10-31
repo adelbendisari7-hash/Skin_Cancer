@@ -19,6 +19,17 @@ usage non commercial. **Vidéos** : `docs/video/visite_complete_dermia.mp4` (tou
 `docs/video/tutoriel_dermia.mp4` (prise en main). Régénérables avec `python outils/video_complete.py` et
 `python outils/video_tutoriel.py` (instance de démonstration lancée, Playwright et Google Chrome requis).
 
+## Démonstration en ligne
+
+Une vitrine **en lecture seule** est déployée sur Vercel depuis ce dépôt (`vercel.json`, branche `main`). Elle affiche
+un instantané de vraies réponses de l'application (`frontend/demo-statique/`, régénéré par
+`python outils/exporter_demo_statique.py`) : le moteur d'IA n'y tourne pas, aucune image n'y est analysée et rien n'y
+est enregistré. Le mode s'active à la construction (`VITE_DEMO_STATIQUE=1`) ; il est absent de la version installée.
+
+Le moteur complet ne peut pas fonctionner sur Vercel : PyTorch et les poids dépassent la limite de 500 Mo d'une
+fonction Python, et une base SQLite ne survit pas sur un disque non persistant. Les poids du modèle ne sont pas
+publiés dans ce dépôt : `modeles/*/poids` et `hors_sujet.npz` se régénèrent avec `python -m src.export_v2`.
+
 ## Statut — à lire avant toute démonstration
 
 | | |
