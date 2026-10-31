@@ -1,0 +1,17 @@
+modèle,params,log-loss CV,F1 macro CV
+XGBoost,"{""max_depth"": 2, ""min_child_weight"": 1, ""n_estimators"": 400}",0.9051,0.1849
+XGBoost,"{""max_depth"": 2, ""min_child_weight"": 5, ""n_estimators"": 423}",0.9069,0.1855
+XGBoost,"{""max_depth"": 3, ""min_child_weight"": 1, ""n_estimators"": 230}",0.9069,0.1809
+XGBoost,"{""max_depth"": 3, ""min_child_weight"": 5, ""n_estimators"": 275}",0.9078,0.1852
+XGBoost,"{""max_depth"": 4, ""min_child_weight"": 5, ""n_estimators"": 201}",0.9082,0.185
+XGBoost,"{""max_depth"": 4, ""min_child_weight"": 1, ""n_estimators"": 176}",0.9085,0.1848
+XGBoost,"{""max_depth"": 6, ""min_child_weight"": 5, ""n_estimators"": 167}",0.9103,0.1874
+XGBoost,"{""max_depth"": 4, ""min_child_weight"": 20, ""n_estimators"": 228}",0.9106,0.1928
+XGBoost,"{""max_depth"": 2, ""min_child_weight"": 20, ""n_estimators"": 493}",0.9107,0.1883
+XGBoost,"{""max_depth"": 3, ""min_child_weight"": 20, ""n_estimators"": 362}",0.911,0.1946
+XGBoost,"{""max_depth"": 6, ""min_child_weight"": 20, ""n_estimators"": 208}",0.9123,0.1947
+XGBoost,"{""max_depth"": 6, ""min_child_weight"": 1, ""n_estimators"": 126}",0.9129,0.1824
+Forêt aléatoire,"{""min_samples_leaf"": 20}",0.9193,0.1681
+Forêt aléatoire,"{""min_samples_leaf"": 50}",0.9308,0.1572
+Forêt aléatoire,"{""min_samples_leaf"": 5}",0.9311,0.1983
+Forêt aléatoire,"{""min_samples_leaf"": 1}",2.6987,0.2143

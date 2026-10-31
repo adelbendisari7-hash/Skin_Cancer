@@ -1,0 +1,24 @@
+# Environnement et fichiers régénérables
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Dérivés lourds (régénérables avec src.prepare et src.run_all)
+cache/
+checkpoints/
+
+# Fichiers temporaires de Word
+rapport/~$*
+
+# Jamais publiés (dépôt public) : poids du modèle, statistiques, prédictions, journaux, configuration locale Vercel
+*.pt
+*.pth
+*.sqlite
+*.sqlite-*
+application/modeles/*/poids/
+application/modeles/*/*.npz
+resultats/predictions/
+logs/
+.vercel/
+.env*

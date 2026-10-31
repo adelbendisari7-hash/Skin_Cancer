@@ -1,0 +1,4 @@
+méthode,couverture,taille moyenne,singletons,vides,couverture mel,taux traité,mel manqués en silence (val)
+aps,0.884,1.362,0.673,0.029,0.877,0.636,7.333
+lac,0.88,1.192,0.818,0.0,0.846,0.746,8.667
+mondrian,0.884,1.469,0.673,0.0,0.937,0.67,5.0

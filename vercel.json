@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd application/frontend && npm ci",
+  "buildCommand": "cd application/frontend && VITE_DEMO_STATIQUE=1 npm run build && cp -r demo-statique dist/demo",
+  "outputDirectory": "application/frontend/dist",
+  "rewrites": [{ "source": "/((?!demo/|assets/|favicon\\.svg).*)", "destination": "/index.html" }],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
+    }
+  ]
+}

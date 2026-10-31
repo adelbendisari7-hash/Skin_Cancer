@@ -1,0 +1,68 @@
+@import "@fontsource/atkinson-hyperlegible-next/400.css";
+@import "@fontsource/atkinson-hyperlegible-next/600.css";
+@import "@fontsource/atkinson-hyperlegible-next/700.css";
+/* Glyphes arabes (interface en arabe) : IBM Plex Sans Arabic, licence OFL, sous-ensemble arabe seulement. */
+@import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
+@import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
+@import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
+@import "tailwindcss";
+
+/*
+  Jetons de design.
+  Encre = brun mélanine (le texte a la couleur du pigment que l'on cherche) ;
+  fond porcelaine froid ; un seul accent, le vert-bleu des blouses de bloc ;
+  rose dermique réservé à l'oculaire ; 4 couleurs de statut réservées au triage
+  (toujours accompagnées d'une icône et d'un libellé).
+*/
+@theme {
+  --font-sans: "Atkinson Hyperlegible Next", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+
+  --color-encre: #2b211c;
+  --color-encre-2: #5e534d;
+  --color-encre-3: #857c76;
+  --color-porcelaine: #f4f6f5;
+  --color-surface: #ffffff;
+  --color-trait: #d9dfdc;
+  --color-trait-2: #e9eeec;
+
+  --color-bloc: #0e6a64;
+  --color-bloc-fonce: #094e4a;
+  --color-bloc-pale: #e2f0ee;
+  --color-derme: #e8cfc6;
+
+  --color-urgent: #b42318;
+  --color-urgent-pale: #fdecea;
+  --color-avis: #a6450a;
+  --color-avis-pale: #fdf1e5;
+  --color-renvoi: #3b4a6b;
+  --color-renvoi-pale: #ecf0f7;
+  --color-benin: #0a6b41;
+  --color-benin-pale: #e6f4ec;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-porcelaine text-encre font-sans antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { @apply text-encre; letter-spacing: -0.005em; }
+  /* L'arabe ne supporte pas l'espacement des lettres (il casse les liaisons) et demande un interligne plus large. */
+  [dir="rtl"] body { line-height: 1.65; }
+  [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { letter-spacing: 0; }
+  :focus-visible { outline: 2px solid var(--color-bloc); outline-offset: 2px; border-radius: 3px; }
+  ::selection { background: var(--color-bloc-pale); }
+  .chiffres { font-variant-numeric: tabular-nums; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Une seule animation orchestrée : l'oculaire « fait la mise au point » à l'arrivée du résultat. */
+@keyframes mise-au-point {
+  from { filter: blur(6px) saturate(0.6); transform: scale(1.03); }
+  to { filter: blur(0) saturate(1); transform: scale(1); }
+}
+.mise-au-point { animation: mise-au-point 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }

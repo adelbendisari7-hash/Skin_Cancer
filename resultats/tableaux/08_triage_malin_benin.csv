@@ -1,0 +1,13 @@
+modèle,décision,sensibilité malin,spécificité bénin,malins non renvoyés,part des cas renvoyés,malins au test
+M1,classique,0.637,0.944,70.333,0.168,194.0
+M1,coût R=10,0.801,0.832,38.667,0.29,194.0
+M1,coût + abstention,0.911,0.733,17.333,0.391,194.0
+M3,classique,0.663,0.944,65.333,0.172,194.0
+M3,coût R=10,0.828,0.824,33.333,0.302,194.0
+M3,coût + abstention,0.933,0.734,13.0,0.394,194.0
+M4,classique,0.625,0.948,72.667,0.163,194.0
+M4,coût R=10,0.766,0.854,45.333,0.266,194.0
+M4,coût + abstention,0.916,0.701,16.333,0.417,194.0
+M5,classique,0.718,0.908,54.667,0.212,194.0
+M5,coût R=10,0.871,0.782,25.0,0.344,194.0
+M5,coût + abstention,0.955,0.672,8.667,0.449,194.0

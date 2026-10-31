@@ -1,0 +1,5 @@
+Images dermoscopiques : jeu de données HAM10000
+Tschandl P., Rosendahl C., Kittler H. The HAM10000 dataset, a large collection of multi-source dermatoscopic
+images of common pigmented skin lesions. Sci Data 5, 180161 (2018). doi:10.1038/sdata.2018.161
+Licence : CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/) — usage non commercial.
+Modifications : images réduites et converties en JPEG ; cartes Grad-CAM et contours ABCD calculés par l'application.

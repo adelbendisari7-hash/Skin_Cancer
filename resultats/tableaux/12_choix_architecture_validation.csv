@@ -1,0 +1,5 @@
+profil,architecture,experience,F1 macro,AUC OvR macro,AUC mel,Exactitude équilibrée,regle_satisfaite_par_b2
+complet,efficientnet_b0,M5,0.705,0.9695,0.9309,0.7056,True
+complet,efficientnet_b2,M5_B2,0.7214,0.972,0.9276,0.7067,True
+sans_contexte,efficientnet_b0,M5_dropClin,0.653,0.9675,0.9295,0.6416,True
+sans_contexte,efficientnet_b2,M5_dropClin_B2,0.6799,0.971,0.9279,0.6766,True

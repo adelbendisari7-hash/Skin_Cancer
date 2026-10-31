@@ -1,0 +1,5 @@
+profil,architecture,F1 macro,AUC OvR macro,AUC mel,Exactitude équilibrée
+complet,efficientnet_b0,0.6944,0.9674,0.9261,0.6784
+complet,efficientnet_b2,0.6986,0.9659,0.9382,0.6794
+sans_contexte,efficientnet_b0,0.6519,0.9604,0.9204,0.6317
+sans_contexte,efficientnet_b2,0.67,0.9633,0.9327,0.6502

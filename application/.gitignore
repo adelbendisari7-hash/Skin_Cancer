@@ -1,0 +1,9 @@
+# Données des établissements (base, images, clé secrète) : jamais dans le dépôt
+donnees/
+donnees_demo/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+frontend/node_modules/
+# frontend/dist est versionné volontairement : les clients n'ont pas besoin de Node.js

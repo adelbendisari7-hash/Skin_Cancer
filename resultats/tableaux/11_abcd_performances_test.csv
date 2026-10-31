@@ -1,0 +1,5 @@
+critère,AUC mélanome vs nævus,AUC mélanome vs reste,moyenne mélanome,moyenne nævus
+A,0.715,0.649,1.37,0.69
+B,0.658,0.605,2.42,1.26
+C,0.728,0.716,2.64,2.0
+irregularite,0.665,0.586,2.64,1.81

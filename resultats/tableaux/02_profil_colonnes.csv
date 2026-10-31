@@ -1,0 +1,8 @@
+colonne,type,manquants,« unknown »,valeurs distinctes,plus fréquentes
+lesion_id,str,0,0,7470,"HAM_0000835 (6), HAM_0003789 (6), HAM_0001863 (6)"
+image_id,str,0,0,10015,"ISIC_0024306 (1), ISIC_0024307 (1), ISIC_0024308 (1)"
+dx,str,0,0,7,"nv (6705), mel (1113), bkl (1099)"
+dx_type,str,0,0,4,"histo (5340), follow_up (3704), consensus (902)"
+age,float64,57,0,18,"45.0 (1299), 50.0 (1187), 55.0 (1009)"
+sex,str,0,57,3,"male (5406), female (4552), unknown (57)"
+localization,str,0,234,15,"back (2192), lower extremity (2077), trunk (1404)"

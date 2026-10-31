@@ -1,0 +1,16 @@
+# Python 3.13 — versions utilisées pour les résultats du rapport
+# PyTorch avec CUDA 12.8 : pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0
+torchvision==0.26.0
+numpy==2.5.4
+pandas==3.0.6
+scikit-learn==1.9.1
+scipy==1.18.1
+xgboost==3.4.1
+matplotlib==3.11.2
+pillow==12.3.0
+jupyter==1.1.1
+ipykernel==7.4.0
+nbconvert==7.17.2
+nbformat==5.11.1
+python-docx==1.2.0

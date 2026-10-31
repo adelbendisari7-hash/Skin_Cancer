@@ -1,0 +1,393 @@
+{
+  "nom": "ham10000-m5-v2",
+  "version": "2.0.0",
+  "date": "2026-10-18",
+  "description": "Classification de lésions dermoscopiques (7 classes) par EfficientNet-B2 (288 px) guidé par le contexte patient (FiLM), décision sensible au coût, abstention conforme (Mondrian) et refus des images hors sujet. Moyenne de 3 graines.",
+  "statut": "DÉMONSTRATION — usage non commercial — pas un dispositif médical",
+  "donnees_entrainement": {
+    "jeu": "HAM10000 (Tschandl et al., Sci Data 2018, doi:10.1038/sdata.2018.161)",
+    "licence": "CC BY-NC 4.0 (Attribution - Pas d'utilisation commerciale)",
+    "consequence": "Ce modèle ne peut pas être vendu ni utilisé commercialement. Pour un usage commercial, réentraîner sur des données sous licence adaptée et obtenir le marquage réglementaire.",
+    "centres": "Vienne (Autriche), Queensland (Australie)"
+  },
+  "usage_prevu": "Aide à la décision pour professionnels de santé, sur images dermoscopiques. Ne remplace pas l'examen clinique ni l'histologie.",
+  "classes": [
+    "nv",
+    "mel",
+    "bkl",
+    "bcc",
+    "akiec",
+    "vasc",
+    "df"
+  ],
+  "noms_classes": {
+    "nv": "Nævus mélanocytaire",
+    "mel": "Mélanome",
+    "bkl": "Kératose bénigne",
+    "bcc": "Carcinome basocellulaire",
+    "akiec": "Kératose actinique / Bowen",
+    "vasc": "Lésion vasculaire",
+    "df": "Dermatofibrome"
+  },
+  "classes_malignes": [
+    "mel",
+    "bcc",
+    "akiec"
+  ],
+  "indice_melanome": 1,
+  "pretraitement": {
+    "taille": 288,
+    "redimensionnement": "LANCZOS, sans conserver le ratio",
+    "moyenne": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "ecart_type": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "tta": [
+      "identite",
+      "flip_h",
+      "flip_v",
+      "flip_hv"
+    ]
+  },
+  "encodeur_clinique": {
+    "age_mediane": 50.0,
+    "age_moyenne": 51.815642458100555,
+    "age_ecart_type": 16.994275674716135,
+    "sexes": [
+      "female",
+      "male",
+      "unknown"
+    ],
+    "localisations": [
+      "abdomen",
+      "acral",
+      "back",
+      "chest",
+      "ear",
+      "face",
+      "foot",
+      "genital",
+      "hand",
+      "lower extremity",
+      "neck",
+      "scalp",
+      "trunk",
+      "unknown",
+      "upper extremity"
+    ],
+    "variables": [
+      "age",
+      "age_manquant",
+      "sex=female",
+      "sex=male",
+      "sex=unknown",
+      "loc=abdomen",
+      "loc=acral",
+      "loc=back",
+      "loc=chest",
+      "loc=ear",
+      "loc=face",
+      "loc=foot",
+      "loc=genital",
+      "loc=hand",
+      "loc=lower extremity",
+      "loc=neck",
+      "loc=scalp",
+      "loc=trunk",
+      "loc=unknown",
+      "loc=upper extremity"
+    ]
+  },
+  "decision": {
+    "rapports_cout": [
+      5,
+      10,
+      20
+    ],
+    "rapport_defaut": 10,
+    "regle": "mélanome si p(mel) ≥ seuil, sinon la classe non-mélanome la plus probable"
+  },
+  "abstention": {
+    "methode": "LAC conditionnel par classe (Mondrian)",
+    "alpha": 0.1,
+    "regle": "traité si l'ensemble conforme est un singleton égal à la décision au coût"
+  },
+  "profils": {
+    "complet": {
+      "experience": "M5_B2",
+      "architecture": "efficientnet_b2",
+      "fusion": "film",
+      "film": "final",
+      "n_clin": 20,
+      "poids": [
+        {
+          "fichier": "poids/M5_B2_s0.pt",
+          "sha256": "15ed29b4c2443d89ba3a70deae670d0d06aed38bb4eb9336a873627032daa9fa"
+        },
+        {
+          "fichier": "poids/M5_B2_s1.pt",
+          "sha256": "900cc97696d973c1eebdd6ed3e5f1191c457e7726de13254560d5793fda67d60"
+        },
+        {
+          "fichier": "poids/M5_B2_s2.pt",
+          "sha256": "0e71447bfdaf205a43833d29a3f93c4b2b7e7faeee03dff2d6cb854d96b3aa73"
+        }
+      ],
+      "calibre_sur": "contexte complet",
+      "thresholds": {
+        "5": 0.35,
+        "10": 0.1,
+        "20": 0.1
+      },
+      "conformal_q": [
+        0.536929726600647,
+        0.9455243945121765,
+        0.8221200108528137,
+        0.9309015274047852,
+        0.9641461372375488,
+        0.9159955382347107,
+        0.8906405568122864
+      ],
+      "metriques_test": {
+        "decision_classique": {
+          "F1 macro": 0.6986,
+          "Exactitude équilibrée": 0.6794,
+          "Sensibilité mel": 0.7257,
+          "Spécificité mel": 0.9319,
+          "Coût attendu": 0.4509,
+          "Exactitude": 0.8256,
+          "AUC OvR macro": 0.9659,
+          "AUC mel": 0.9382
+        },
+        "decision_cout_R10": {
+          "F1 macro": 0.6055,
+          "Exactitude équilibrée": 0.5892,
+          "Sensibilité mel": 0.9204,
+          "Spécificité mel": 0.7746,
+          "Coût attendu": 0.3419,
+          "Exactitude": 0.7384,
+          "AUC OvR macro": 0.9659,
+          "AUC mel": 0.9382
+        },
+        "abstention": {
+          "couverture": 0.9009,
+          "taille moyenne": 1.446,
+          "singletons": 0.6264,
+          "vides": 0.0,
+          "couverture mel": 0.9735,
+          "taux_traite": 0.6264,
+          "melanomes_test": 113,
+          "melanomes_manques_en_silence": 1,
+          "melanomes_renvoyes": 64,
+          "sensibilite_malin_triage": 0.9897,
+          "part_cas_renvoyes": 0.4658
+        },
+        "n_images_test": 1009
+      }
+    },
+    "sans_contexte": {
+      "experience": "M5_dropClin_B2",
+      "architecture": "efficientnet_b2",
+      "fusion": "film",
+      "film": "final",
+      "n_clin": 20,
+      "poids": [
+        {
+          "fichier": "poids/M5_dropClin_B2_s0.pt",
+          "sha256": "5b700f69d3abc1f2faaa2b36b1506c9146426b68b7f2605fa05d515042588b48"
+        },
+        {
+          "fichier": "poids/M5_dropClin_B2_s1.pt",
+          "sha256": "385afc48baf90697cdc1ac0ffd4fe87284e4dae1fd78cee56793328b9b59cf94"
+        },
+        {
+          "fichier": "poids/M5_dropClin_B2_s2.pt",
+          "sha256": "5add1c09ae9423f3e84d17d6ec637910958b973e1afa4e3e12225494288a85d2"
+        }
+      ],
+      "calibre_sur": "contexte entièrement manquant",
+      "thresholds": {
+        "5": 0.4,
+        "10": 0.27,
+        "20": 0.09
+      },
+      "conformal_q": [
+        0.6155126094818115,
+        0.8340268135070801,
+        0.8440065979957581,
+        0.8961546421051025,
+        0.9927658438682556,
+        0.8662207126617432,
+        0.8617450594902039
+      ],
+      "metriques_test": {
+        "decision_classique": {
+          "F1 macro": 0.67,
+          "Exactitude équilibrée": 0.6502,
+          "Sensibilité mel": 0.7434,
+          "Spécificité mel": 0.9129,
+          "Coût attendu": 0.446,
+          "Exactitude": 0.8127,
+          "AUC OvR macro": 0.9633,
+          "AUC mel": 0.9327
+        },
+        "decision_cout_R10": {
+          "F1 macro": 0.6445,
+          "Exactitude équilibrée": 0.6313,
+          "Sensibilité mel": 0.8761,
+          "Spécificité mel": 0.8393,
+          "Coût attendu": 0.3479,
+          "Exactitude": 0.777,
+          "AUC OvR macro": 0.9633,
+          "AUC mel": 0.9327
+        },
+        "abstention": {
+          "couverture": 0.891,
+          "taille moyenne": 1.3429,
+          "singletons": 0.7056,
+          "vides": 0.0,
+          "couverture mel": 0.9204,
+          "taux_traite": 0.7056,
+          "melanomes_test": 113,
+          "melanomes_manques_en_silence": 8,
+          "melanomes_renvoyes": 49,
+          "sensibilite_malin_triage": 0.933,
+          "part_cas_renvoyes": 0.4103
+        },
+        "n_images_test": 1009
+      }
+    }
+  },
+  "limites": [
+    "Entraîné sur deux centres, peaux majoritairement claires : performances inconnues ailleurs.",
+    "Sensibilité mélanome (test, R = 10) : 68 % chez les moins de 50 ans (22 mélanomes) contre 98 % à partir de 50 ans (91 mélanomes).",
+    "Seuils estimés sur un petit jeu de validation (117 images de mélanome).",
+    "Images hors sujet : 87 % refusées sur 55 images très différentes ; une photo de peau prise sans dermoscope n'a pas pu être testée et peut passer le contrôle.",
+    "Critères ABCD automatiques : indicateurs au pouvoir discriminant modeste (AUC 0,66 à 0,73 entre mélanome et nævus sur le test)."
+  ],
+  "hors_sujet": {
+    "fichier": "hors_sujet.npz",
+    "sha256": "91c3adeee1db33247fca34a6c95f4b790bcd199f7e71aa2a7e285510445f1f50",
+    "seuil": 5.3799,
+    "profil": "complet",
+    "methode": "distance de Mahalanobis minimale aux classes (covariance partagée Ledoit-Wolf) à chaque étape du réseau, log-distances centrées-réduites sur la validation, maximum sur les étapes ; seuil = 99.5e centile de la validation",
+    "evaluation": {
+      "variante": "toutes",
+      "rejet_validation": 0.0059,
+      "rejet_test": 0.004,
+      "rejet_hors_sujet": 0.8727,
+      "n_hors_sujet": 55,
+      "rejet_hors_sujet_autre_variante": 0.6545,
+      "par_source": {
+        "fonds d'écran Windows": {
+          "n": 18,
+          "rejet": 0.9444
+        },
+        "illustrations de Windows": {
+          "n": 5,
+          "rejet": 0.6
+        },
+        "captures d'écran de l'application": {
+          "n": 4,
+          "rejet": 1.0
+        },
+        "photos et images scientifiques (scikit-image, matplotlib)": {
+          "n": 11,
+          "rejet": 0.6364
+        },
+        "images synthétiques (documents, aplats, bruit, dégradés)": {
+          "n": 17,
+          "rejet": 1.0
+        }
+      }
+    },
+    "etages": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "normalisation": {
+      "moyenne": [
+        2.532627,
+        2.308558,
+        2.728548,
+        3.2595,
+        3.326857,
+        4.108251,
+        5.300479,
+        5.833675,
+        7.380416
+      ],
+      "ecart_type": [
+        0.77556,
+        0.743652,
+        0.585255,
+        0.5291,
+        0.443385,
+        0.351997,
+        0.280457,
+        0.314335,
+        0.315409
+      ]
+    }
+  },
+  "statut_i18n": {
+    "fr": "DÉMONSTRATION — usage non commercial — pas un dispositif médical",
+    "en": "DEMONSTRATION — non-commercial use — not a medical device",
+    "ar": "عرض توضيحي — استخدام غير تجاري — ليس جهازًا طبيًا"
+  },
+  "i18n": {
+    "en": {
+      "description": "Classification of dermoscopic lesions (7 classes) by EfficientNet-B2 (288 px) guided by the patient context (FiLM), cost-sensitive decision, conformal abstention (Mondrian) and refusal of out-of-scope images. Average of 3 seeds.",
+      "usage_prevu": "Decision support for healthcare professionals, on dermoscopic images. Does not replace clinical examination or histology.",
+      "statut": "DEMONSTRATION — non-commercial use — not a medical device",
+      "consequence": "This model cannot be sold or used commercially. For commercial use, retrain on suitably licensed data and obtain regulatory approval.",
+      "centres": "Vienna (Austria), Queensland (Australia)",
+      "licence": "CC BY-NC 4.0 (Attribution - NonCommercial)",
+      "decision_regle": "melanoma if p(mel) ≥ threshold, otherwise the most probable non-melanoma class",
+      "abstention_methode": "Class-conditional LAC (Mondrian)",
+      "abstention_regle": "handled if the conformal set is a singleton equal to the cost-based decision",
+      "limites": [
+        "Trained on two centres, mostly fair skin: performance unknown elsewhere.",
+        "Melanoma sensitivity (test, R = 10): 68% under 50 years (22 melanomas) versus 98% from 50 years (91 melanomas).",
+        "Thresholds estimated on a small validation set (117 melanoma images).",
+        "Out-of-scope images: 87% refused out of 55 very different images; a skin photo taken without a dermatoscope could not be tested and may pass the check.",
+        "Automatic ABCD criteria: indicators with modest discriminative power (AUC 0.66 to 0.73 between melanoma and nevus on the test set)."
+      ],
+      "calibre_sur_complet": "complete context",
+      "calibre_sur_sans_contexte": "entirely missing context"
+    },
+    "ar": {
+      "description": "تصنيف آفات المنظار الجلدي (7 فئات) بواسطة EfficientNet-B2 (288 بكسل) موجَّه بسياق المريض (FiLM)، مع قرار حساس للتكلفة، وامتناع مطابِق (موندريان)، ورفض الصور خارج النطاق. متوسط 3 نماذج.",
+      "usage_prevu": "أداة مساعدة على اتخاذ القرار لمهنيي الصحة، على صور المنظار الجلدي. لا تُغني عن الفحص السريري ولا عن الفحص النسيجي.",
+      "statut": "عرض توضيحي — استخدام غير تجاري — ليس جهازًا طبيًا",
+      "consequence": "لا يجوز بيع هذا النموذج ولا استخدامه تجاريًا. للاستخدام التجاري يجب إعادة تدريبه على بيانات بترخيص مناسب والحصول على الاعتماد التنظيمي.",
+      "centres": "فيينا (النمسا)، كوينزلاند (أستراليا)",
+      "licence": "CC BY-NC 4.0 (نسب المصنَّف - غير تجاري)",
+      "decision_regle": "ورم ميلانيني إذا كان احتماله ≥ العتبة، وإلا فالفئة غير الميلانينية الأكثر احتمالًا",
+      "abstention_methode": "LAC مشروط بالفئة (موندريان)",
+      "abstention_regle": "تُعالَج الحالة إذا كانت المجموعة المطابِقة عنصرًا واحدًا مطابقًا لقرار التكلفة",
+      "limites": [
+        "دُرِّب على بيانات مركزين، وأغلب البشرات فاتحة: الأداء غير معروف في غيرهما.",
+        "حساسية الورم الميلانيني (الاختبار، R = 10): 68% لدى من هم دون 50 سنة (22 ورمًا) مقابل 98% ابتداءً من 50 سنة (91 ورمًا).",
+        "قُدِّرت العتبات على مجموعة تحقق صغيرة (117 صورة ورم ميلانيني).",
+        "الصور خارج النطاق: رُفض 87% من أصل 55 صورة مختلفة تمامًا؛ لم يكن ممكنًا اختبار صورة جلد ملتقطة دون منظار، وقد تجتاز الفحص.",
+        "معايير ABCD الآلية: مؤشرات ذات قدرة تمييز محدودة (AUC من 0,66 إلى 0,73 بين الورم الميلانيني والوحمة على مجموعة الاختبار)."
+      ],
+      "calibre_sur_complet": "سياق كامل",
+      "calibre_sur_sans_contexte": "سياق مفقود كليًا"
+    }
+  }
+}

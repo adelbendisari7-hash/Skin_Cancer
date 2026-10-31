@@ -1,0 +1,13 @@
+modèle,graine,décision,mel → nv,mel → autre bénin,nv → mel,mélanomes,nævus
+M1,0,classique,28,18,34,113,674
+M1,0,coût R=10,15,9,101,113,674
+M1,1,classique,32,21,20,113,674
+M1,1,coût R=10,17,4,102,113,674
+M1,2,classique,29,10,32,113,674
+M1,2,coût R=10,18,1,103,113,674
+M5,0,classique,22,17,58,113,674
+M5,0,coût R=10,5,1,153,113,674
+M5,1,classique,20,16,57,113,674
+M5,1,coût R=10,8,1,160,113,674
+M5,2,classique,27,9,48,113,674
+M5,2,coût R=10,21,4,74,113,674

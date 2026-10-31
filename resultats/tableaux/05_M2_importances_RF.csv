@@ -1,0 +1,21 @@
+,importance (impureté)
+age,0.5612
+loc=face,0.2291
+loc=trunk,0.0621
+loc=abdomen,0.0365
+loc=chest,0.0176
+loc=upper extremity,0.0157
+loc=back,0.0136
+loc=lower extremity,0.0127
+sex=male,0.0122
+sex=female,0.0121
+loc=foot,0.0102
+loc=neck,0.0063
+loc=scalp,0.005
+loc=unknown,0.0041
+loc=hand,0.0006
+loc=genital,0.0005
+sex=unknown,0.0003
+age_manquant,0.0003
+loc=ear,0.0
+loc=acral,0.0

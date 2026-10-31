@@ -1,0 +1,18 @@
+{
+  "forme": 0.15,
+  "couleur": 4.0,
+  "abrupt": 0.5,
+  "part_couleur": 0.03,
+  "_source": "choisis sur la validation HAM10000 (src/abcd_validation.py)",
+  "_test": {
+    "auc_mel_nv": {
+      "A": 0.715,
+      "B": 0.658,
+      "C": 0.728,
+      "irregularite": 0.665
+    },
+    "segmentation_impossible": 0.0,
+    "lesion_coupee": 0.2309,
+    "n_images": 1009
+  }
+}

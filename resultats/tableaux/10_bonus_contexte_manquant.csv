@@ -1,0 +1,17 @@
+,,,F1 macro,F1 macro,Exactitude équilibrée,Exactitude équilibrée,Sensibilité mel,Sensibilité mel,Spécificité mel,Spécificité mel,Coût attendu,Coût attendu
+,,,mean,std,mean,std,mean,std,mean,std,mean,std
+modèle,test,décision,,,,,,,,,,
+M1,contexte complet,classique,0.646,0.023,0.622,0.017,0.593,0.062,0.94,0.013,0.595,0.069
+M1,contexte complet,coût R=10,0.59,0.036,0.571,0.029,0.811,0.022,0.815,0.012,0.436,0.028
+M3,contexte complet,classique,0.685,0.006,0.651,0.01,0.599,0.036,0.944,0.008,0.573,0.04
+M3,contexte complet,coût R=10,0.617,0.022,0.588,0.025,0.826,0.052,0.814,0.058,0.411,0.024
+M3,contexte manquant,classique,0.622,0.017,0.558,0.02,0.513,0.062,0.965,0.004,0.669,0.072
+M3,contexte manquant,coût R=10,0.56,0.047,0.521,0.036,0.785,0.054,0.827,0.057,0.457,0.018
+M5,contexte complet,classique,0.674,0.016,0.673,0.012,0.673,0.015,0.911,0.004,0.527,0.027
+M5,contexte complet,coût R=10,0.609,0.065,0.605,0.044,0.882,0.09,0.775,0.082,0.389,0.037
+M5,contexte manquant,classique,0.515,0.036,0.475,0.035,0.189,0.113,0.992,0.001,1.044,0.13
+M5,contexte manquant,coût R=10,0.529,0.006,0.513,0.015,0.794,0.06,0.85,0.05,0.451,0.041
+M5_dropClin,contexte complet,classique,0.651,0.042,0.632,0.036,0.622,0.062,0.929,0.003,0.577,0.087
+M5_dropClin,contexte complet,coût R=10,0.602,0.028,0.587,0.024,0.829,0.034,0.804,0.031,0.427,0.044
+M5_dropClin,contexte manquant,classique,0.629,0.041,0.617,0.036,0.625,0.036,0.919,0.01,0.591,0.067
+M5_dropClin,contexte manquant,coût R=10,0.594,0.033,0.586,0.022,0.861,0.027,0.797,0.01,0.407,0.053

@@ -1,0 +1,81 @@
+valeur,p(mel) moyen,modèle,images,variable
+10,0.10190794616937637,M5,vrais mélanomes,age
+20,0.24201016128063202,M5,vrais mélanomes,age
+30,0.3986825942993164,M5,vrais mélanomes,age
+40,0.5487530827522278,M5,vrais mélanomes,age
+50,0.6448355913162231,M5,vrais mélanomes,age
+60,0.6751449704170227,M5,vrais mélanomes,age
+70,0.6604176759719849,M5,vrais mélanomes,age
+80,0.6352202892303467,M5,vrais mélanomes,age
+back,0.5782623887062073,M5,vrais mélanomes,localization
+lower extremity,0.5871826410293579,M5,vrais mélanomes,localization
+upper extremity,0.6525635719299316,M5,vrais mélanomes,localization
+trunk,0.552640974521637,M5,vrais mélanomes,localization
+abdomen,0.573303759098053,M5,vrais mélanomes,localization
+face,0.5705992579460144,M5,vrais mélanomes,localization
+chest,0.555229902267456,M5,vrais mélanomes,localization
+foot,0.706662654876709,M5,vrais mélanomes,localization
+neck,0.5799639821052551,M5,vrais mélanomes,localization
+scalp,0.5021926164627075,M5,vrais mélanomes,localization
+hand,0.4758952856063843,M5,vrais mélanomes,localization
+ear,0.5659306049346924,M5,vrais mélanomes,localization
+10,0.004668717738240957,M5,vrais nævus,age
+20,0.015574507415294647,M5,vrais nævus,age
+30,0.04566097632050514,M5,vrais nævus,age
+40,0.09201053529977798,M5,vrais nævus,age
+50,0.1323937624692917,M5,vrais nævus,age
+60,0.1537674367427826,M5,vrais nævus,age
+70,0.1572655886411667,M5,vrais nævus,age
+80,0.157821923494339,M5,vrais nævus,age
+back,0.08667577058076859,M5,vrais nævus,localization
+lower extremity,0.09700164198875427,M5,vrais nævus,localization
+upper extremity,0.13336706161499023,M5,vrais nævus,localization
+trunk,0.06595209240913391,M5,vrais nævus,localization
+abdomen,0.06665695458650589,M5,vrais nævus,localization
+face,0.12038229405879974,M5,vrais nævus,localization
+chest,0.08007487654685974,M5,vrais nævus,localization
+foot,0.09528551995754242,M5,vrais nævus,localization
+neck,0.11026997864246368,M5,vrais nævus,localization
+scalp,0.060618266463279724,M5,vrais nævus,localization
+hand,0.061712734401226044,M5,vrais nævus,localization
+ear,0.0532430037856102,M5,vrais nævus,localization
+10,0.22789913415908813,M3,vrais mélanomes,age
+20,0.3339974880218506,M3,vrais mélanomes,age
+30,0.43056872487068176,M3,vrais mélanomes,age
+40,0.5097936987876892,M3,vrais mélanomes,age
+50,0.5724786520004272,M3,vrais mélanomes,age
+60,0.6047278046607971,M3,vrais mélanomes,age
+70,0.6070718169212341,M3,vrais mélanomes,age
+80,0.6007595658302307,M3,vrais mélanomes,age
+back,0.5663929581642151,M3,vrais mélanomes,localization
+lower extremity,0.5652000904083252,M3,vrais mélanomes,localization
+upper extremity,0.6011582612991333,M3,vrais mélanomes,localization
+trunk,0.5447525382041931,M3,vrais mélanomes,localization
+abdomen,0.5571718215942383,M3,vrais mélanomes,localization
+face,0.5719600319862366,M3,vrais mélanomes,localization
+chest,0.5530273914337158,M3,vrais mélanomes,localization
+foot,0.5706960558891296,M3,vrais mélanomes,localization
+neck,0.5572819113731384,M3,vrais mélanomes,localization
+scalp,0.5455600023269653,M3,vrais mélanomes,localization
+hand,0.5382163524627686,M3,vrais mélanomes,localization
+ear,0.5507164597511292,M3,vrais mélanomes,localization
+10,0.003740606363862753,M3,vrais nævus,age
+20,0.009986195713281631,M3,vrais nævus,age
+30,0.02265831083059311,M3,vrais nævus,age
+40,0.043671514838933945,M3,vrais nævus,age
+50,0.06989000737667084,M3,vrais nævus,age
+60,0.09058552235364914,M3,vrais nævus,age
+70,0.10034293681383133,M3,vrais nævus,age
+80,0.10502060502767563,M3,vrais nævus,age
+back,0.04675334692001343,M3,vrais nævus,localization
+lower extremity,0.05642960965633392,M3,vrais nævus,localization
+upper extremity,0.06425585597753525,M3,vrais nævus,localization
+trunk,0.033535026013851166,M3,vrais nævus,localization
+abdomen,0.034019097685813904,M3,vrais nævus,localization
+face,0.079879991710186,M3,vrais nævus,localization
+chest,0.04484086111187935,M3,vrais nævus,localization
+foot,0.03429876267910004,M3,vrais nævus,localization
+neck,0.0513225756585598,M3,vrais nævus,localization
+scalp,0.0435154102742672,M3,vrais nævus,localization
+hand,0.04529380053281784,M3,vrais nævus,localization
+ear,0.029743455350399017,M3,vrais nævus,localization
