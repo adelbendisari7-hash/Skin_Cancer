@@ -18,6 +18,8 @@ Captures d'écran : `docs/captures/` (v1) et `docs/captures/v2/` (3 langues) —
 usage non commercial. **Vidéos** : `docs/video/visite_complete_dermia.mp4` (toutes les fonctions) et
 `docs/video/tutoriel_dermia.mp4` (prise en main). Régénérables avec `python outils/video_complete.py` et
 `python outils/video_tutoriel.py` (instance de démonstration lancée, Playwright et Google Chrome requis).
+Présentation aux clients, avec voix off : `docs/video/presentation_dermia.mp4`, tournée sur le site en ligne
+(`python outils/narration_presentation.py` puis `python outils/video_presentation.py`).
 
 ## Démonstration en ligne
 
@@ -123,7 +125,7 @@ application/
 ├── modeles/<nom>/           paquet de modèle : manifest.json + poids (empreintes SHA-256 vérifiées)
 ├── tests/                   moteur (non-régression), ABCD, recalibrage et suivi, sauvegardes, traductions et PDF,
 │                            API (parcours complet, lésions, hors sujet, recalibrage, restauration, protections)
-├── outils/                  creer_demo.py, captures_revue.py (3 langues), video_complete.py, video_tutoriel.py
+├── outils/                  creer_demo.py, captures_revue.py (3 langues), video_complete.py, video_tutoriel.py, video_presentation.py
 ├── donnees/                 créé au 1er lancement : base, images, clé de session (à sauvegarder, jamais versionné)
 ├── installer.bat / lancer_application.bat
 └── requirements.txt

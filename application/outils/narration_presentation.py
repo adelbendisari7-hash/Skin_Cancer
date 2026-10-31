@@ -27,8 +27,9 @@ SCENES = {
     "resultat": "Quelques secondes plus tard, le résultat apparaît. L'outil propose une orientation claire, ici une "
                 "suspicion de mélanome, avec les probabilités de sept diagnostics et un seuil d'alerte réglé pour "
                 "limiter les mélanomes manqués.",
-    "explication": "Le médecin voit où l'intelligence artificielle a regardé. Il dispose aussi des critères A, B, C, D, "
-                   "mesurés automatiquement sur le contour de la lésion.",
+    "explication": "Le médecin voit où l'intelligence artificielle a regardé. Il dispose aussi des critères ABCD, mesurés "
+                   "automatiquement sur le contour de la lésion ; le diamètre s'ajoute dès que l'échelle du dermoscope est "
+                   "connue.",
     "prudence": "Sa particularité, c'est la prudence. Quand plusieurs diagnostics restent plausibles, l'outil s'abstient "
                 "et renvoie le cas au médecin.",
     "hors_sujet": "Et si l'image n'est pas une dermoscopie, il la refuse, plutôt que de répondre au hasard.",

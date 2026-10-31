@@ -34,7 +34,7 @@ SUPERPOSITION = r"""
     background:rgba(14,106,100,.22);border:2.5px solid #0e6a64;z-index:2147483647;pointer-events:none;
     transition:transform .12s, background .12s}
   #tuto-curseur.clic{transform:scale(.65);background:rgba(14,106,100,.6)}
-  #tuto-legende{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);width:max-content;max-width:min(980px,90vw);
+  #tuto-legende{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);width:max-content;direction:ltr;max-width:min(980px,90vw);
     background:rgba(43,33,28,.95);color:#fff;font:700 21px/1.35 "Atkinson Hyperlegible Next","Segoe UI",sans-serif;
     padding:14px 24px 15px;border-radius:8px;z-index:2147483646;pointer-events:none;opacity:0;transition:opacity .3s;
     box-shadow:0 8px 28px rgba(0,0,0,.28)}
