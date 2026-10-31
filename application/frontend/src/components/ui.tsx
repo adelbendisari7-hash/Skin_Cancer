@@ -1,7 +1,7 @@
 import { CircleAlert, Info, LoaderCircle, X } from 'lucide-react'
 import {
   useEffect, useId, useRef,
-  type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes,
+  type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type Ref, type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react'
 import { t } from '../i18n'
@@ -15,10 +15,11 @@ const VARIANTES: Record<Variante, string> = {
   danger: 'bg-surface text-urgent border border-urgent/40 hover:bg-urgent-pale',
 }
 
-export function Bouton({ variante = 'principal', chargement = false, icone, children, className = '', ...rest }:
-  ButtonHTMLAttributes<HTMLButtonElement> & { variante?: Variante; chargement?: boolean; icone?: ReactNode }) {
+export function Bouton({ variante = 'principal', chargement = false, icone, children, className = '', ref, ...rest }:
+  ButtonHTMLAttributes<HTMLButtonElement> & { variante?: Variante; chargement?: boolean; icone?: ReactNode; ref?: Ref<HTMLButtonElement> }) {
   return (
     <button
+      ref={ref}
       {...rest}
       disabled={rest.disabled || chargement}
       className={`inline-flex items-center justify-center gap-2 rounded-[5px] px-3.5 py-2 text-[14px] font-semibold

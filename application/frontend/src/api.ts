@@ -1,5 +1,5 @@
 // Client de l'API locale (même origine ; la session est un cookie HttpOnly).
-import { DEMO, etSiDemo, RefusDemo, repondreDemo } from './demoStatique'
+import { DEMO, etSiDemo, RefusDemo, repondreDemo, urlLocale } from './demoStatique'
 import { langueCourante, t, type Langue } from './i18n'
 
 export type Role = 'admin' | 'medecin'
@@ -261,12 +261,12 @@ async function demo<T>(appel: () => Promise<T>): Promise<T> {
   try {
     return await appel()
   } catch (e) {
-    throw e instanceof RefusDemo ? new ErreurApi(e.statut, e.message) : e
+    throw e instanceof RefusDemo ? new ErreurApi(e.statut, e.message, e.details) : e
   }
 }
 
 async function requete<T>(methode: string, chemin: string, corps?: unknown): Promise<T> {
-  if (DEMO) return demo(() => repondreDemo<T>(methode, chemin))
+  if (DEMO) return demo(() => repondreDemo<T>(methode, chemin, corps))
   let r: Response
   const entetes: Record<string, string> = { 'X-Langue': langueCourante() }
   if (corps !== undefined && !(corps instanceof FormData)) entetes['Content-Type'] = 'application/json'
@@ -330,7 +330,7 @@ export const api = {
   revue: (id: number, d: { revue: 'confirmee' | 'corrigee'; diagnostic_final?: string | null; commentaire?: string | null; histologie?: boolean }) =>
     requete<Analyse>('POST', `/api/analyses/${id}/revue`, d),
   imageUrl: (id: number, nature: 'image' | 'gradcam' | 'abcd') =>
-    (DEMO ? `/demo/images/${id}_${nature}.jpg` : `/api/analyses/${id}/image/${nature}`),
+    (DEMO ? urlLocale(id, nature) ?? `/demo/images/${id}_${nature}.jpg` : `/api/analyses/${id}/image/${nature}`),
   compteRenduUrl: (id: number, langue: Langue) =>
     (DEMO ? `/demo/pdf/${id}_${langue}.pdf` : `/api/analyses/${id}/compte-rendu.pdf?langue=${langue}`),
 

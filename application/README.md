@@ -21,14 +21,34 @@ usage non commercial. **Vidéos** : `docs/video/visite_complete_dermia.mp4` (tou
 
 ## Démonstration en ligne
 
-Une vitrine **en lecture seule** est déployée sur Vercel depuis ce dépôt (`vercel.json`, branche `main`). Elle affiche
-un instantané de vraies réponses de l'application (`frontend/demo-statique/`, régénéré par
-`python outils/exporter_demo_statique.py`) : le moteur d'IA n'y tourne pas, aucune image n'y est analysée et rien n'y
-est enregistré. Le mode s'active à la construction (`VITE_DEMO_STATIQUE=1`) ; il est absent de la version installée.
+Une démonstration est déployée sur Vercel depuis ce dépôt (`vercel.json`, branche `main`) :
+https://dermia-prudence.vercel.app. Le mode s'active à la construction (`VITE_DEMO_STATIQUE=1`) ; il est absent de la
+version installée. Elle contient deux choses :
 
-Le moteur complet ne peut pas fonctionner sur Vercel : PyTorch et les poids dépassent la limite de 500 Mo d'une
-fonction Python, et une base SQLite ne survit pas sur un disque non persistant. Les poids du modèle ne sont pas
-publiés dans ce dépôt : `modeles/*/poids` et `hors_sujet.npz` se régénèrent avec `python -m src.export_v2`.
+- un instantané de vraies réponses de l'application (`frontend/demo-statique/`, régénéré par
+  `python outils/exporter_demo_statique.py`), en lecture seule ;
+- le vrai moteur, qui tourne **dans le navigateur du visiteur** (ONNX Runtime Web dans un fil de calcul,
+  `frontend/src/navigateur/`). L'image n'est envoyée à aucun serveur ; patients, analyses et validations du visiteur
+  restent dans son navigateur (IndexedDB) et peuvent être effacés d'un clic. Un avis obligatoire précède la première
+  analyse, car un site public peut être utilisé par un non-médecin. Premier lancement : environ 55 Mo téléchargés.
+
+Les réseaux sont exportés par `python -m src.export_onnx` (depuis `projet/`, demi-précision, un tronc et une tête par
+réseau). `vercel.json` envoie les en-têtes COOP/COEP qui activent le calcul multi-fil ; sans eux, le moteur tourne sur
+un seul fil, plus lentement.
+
+Fidélité au moteur PyTorch (`python outils/verifier_navigateur.py <dist>`, résultats dans
+`docs/verification_navigateur.json`) : sur 70 images du jeu de test HAM10000 dans Chrome, décision, orientation,
+ensemble conforme et scores A, B et C identiques dans 100 % des cas, écart de probabilité maximal 0,0038, aucune requête
+d'envoi pendant les analyses, document de test refusé. C'est une vérification de reproduction du moteur, pas une
+nouvelle évaluation clinique.
+
+Différences avec l'application installée : pas de compte rendu PDF ni de diamètre (échelle inconnue) sur les analyses
+du visiteur, pas de lecture des TIFF, et aucune administration réelle.
+
+Le moteur serveur complet ne peut pas fonctionner sur Vercel : PyTorch et les poids dépassent la limite de 500 Mo d'une
+fonction Python, et une base SQLite ne survit pas sur un disque non persistant. **Les réseaux ONNX sont publics** (dans
+ce dépôt et téléchargeables depuis le site) : ils restent soumis à la licence non commerciale de HAM10000. Les poids
+PyTorch (`modeles/*/poids`, `hors_sujet.npz`) ne sont pas publiés et se régénèrent avec `python -m src.export_v2`.
 
 ## Statut — à lire avant toute démonstration
 

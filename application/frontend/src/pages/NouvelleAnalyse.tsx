@@ -6,11 +6,13 @@ import { CarteCorps } from '../components/CarteCorps'
 import { Oculaire, Statut } from '../components/metier'
 import { Bouton, Champ, Dialogue, EnTete, Liste, Message, Saisie } from '../components/ui'
 import { useApp } from '../contexte'
-import { DEMO } from '../demoStatique'
+import { DEMO, effacerLocal, suivreProgres } from '../demoStatique'
+import type { Progres } from '../navigateur/moteur'
 import { t } from '../i18n'
 import { ageDepuis, ANNEE_COURANTE, CODES_LOCALISATIONS, CODES_SEXES, date, entier, nombre, nomLoc, nomSexe } from '../lib/format'
 
 const TYPES = ['image/jpeg', 'image/png', 'image/tiff', 'image/bmp', 'image/webp']
+let avisAccepte = false        // démonstration : l'avis n'est demandé qu'une fois par visite
 
 function Etape({ n, titre, fait, children }: { n: number; titre: string; fait: boolean; children: ReactNode }) {
   return (
@@ -155,7 +157,12 @@ export function NouvelleAnalyse() {
   const [envoi, setEnvoi] = useState(false)
   const [survol, setSurvol] = useState(false)
   const [horsSujet, setHorsSujet] = useState<{ score: number; seuil: number } | null>(null)
+  const [progres, setProgres] = useState<Progres | null>(null)
+  const [avis, setAvis] = useState(false)
+  const [accepte, setAccepte] = useState(avisAccepte)
+  const [compris, setCompris] = useState(false)
   const entree = useRef<HTMLInputElement>(null)
+  const depart = useRef<HTMLButtonElement>(null)
 
   // Choisir un patient pré-remplit l'âge (depuis l'année de naissance) et le sexe, modifiables ensuite.
   function choisirPatient(p: Patient | null, lesionVoulue?: number) {
@@ -201,6 +208,8 @@ export function NouvelleAnalyse() {
 
   async function envoyer(forcer: boolean) {
     if (!pret || !patient || !fichier) return
+    if (DEMO && !accepte) { setAvis(true); return }
+    if (DEMO) suivreProgres(setProgres)
     setEnvoi(true); setErreur(null); setHorsSujet(null)
     const fd = new FormData()
     fd.set('patient_id', String(patient.id))
@@ -224,11 +233,20 @@ export function NouvelleAnalyse() {
   }
 
   const analyser = (e: FormEvent) => { e.preventDefault(); void envoyer(false) }
+  // l'avis vient d'être accepté : `accepte` n'est visible qu'au prochain rendu, d'où l'appel différé
+  const envoyerApresAvis = () => new Promise<void>((fin) => setTimeout(() => { depart.current?.click(); fin() }, 0))
 
   return (
     <>
       <EnTete titre={t('nav.nouvelleAnalyse')} sousTitre={t('na.sousTitre')} />
-      {DEMO && <div className="mb-6"><Message type="info">{t('demo.nouvelleAnalyse')}</Message></div>}
+      {DEMO && (
+        <div className="mb-6">
+          <Message type="info">
+            {t('demo.nouvelleAnalyse')}{' '}
+            <button type="button" onClick={() => void effacerLocal()} className="font-semibold underline">{t('demo.effacer')}</button>
+          </Message>
+        </div>
+      )}
       <form onSubmit={analyser} className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
           <Etape n={1} titre={t('na.etapePatient')} fait={!!patient}><ChoixPatient patient={patient} onChoix={(p) => choisirPatient(p)} /></Etape>
@@ -291,13 +309,27 @@ export function NouvelleAnalyse() {
               <dd className="font-semibold">{age ? t('commun.ans', { n: entier(Number(age)) }) : t('commun.ageNonPrecise')}{t('commun.liste')}{nomSexe(sexe).toLowerCase()}</dd>
             </dl>
             {erreur && <div className="mt-4"><Message>{erreur}</Message></div>}
-            <Bouton type="submit" disabled={!pret} chargement={envoi} className="mt-5 w-full py-2.5">
-              {envoi ? t('na.enCours') : t('na.analyser')}
+            <Bouton ref={depart} type="submit" disabled={!pret} chargement={envoi} className="mt-5 w-full py-2.5">
+              {envoi ? (progres?.etape === 'telechargement'
+                ? t('demo.telechargement', { p: Math.round(progres.part * 100) }) : t('na.enCours')) : t('na.analyser')}
             </Bouton>
             {!pret && !envoi && <p className="mt-2 text-center text-[13px] text-encre-2">{t('na.completer')}</p>}
           </div>
         </aside>
       </form>
+
+      <Dialogue ouvert={avis} titre={t('demo.avisTitre')} onFermer={() => setAvis(false)}>
+        <div className="flex flex-col gap-3 text-[14.5px]">
+          <p>{t('demo.avisTexte')}</p>
+          <label className="flex items-start gap-2.5 font-semibold">
+            <input type="checkbox" checked={compris} onChange={(e) => setCompris(e.target.checked)} className="mt-1 size-4 accent-bloc" />
+            {t('demo.avisCase')}
+          </label>
+          <Bouton className="self-start" disabled={!compris} onClick={() => { avisAccepte = true; setAccepte(true); setAvis(false); suivreProgres(setProgres); void envoyerApresAvis() }}>
+            {t('na.analyser')}
+          </Bouton>
+        </div>
+      </Dialogue>
 
       <Dialogue ouvert={horsSujet !== null} titre={t('hs.titre')} onFermer={() => setHorsSujet(null)}>
         <div className="flex gap-3">

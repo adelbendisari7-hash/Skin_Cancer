@@ -1,0 +1,21 @@
+{
+ "n_images": 70,
+ "ecart_probabilite_max": 0.0037626480177623822,
+ "ecart_probabilite_median": 0.0004792674546841638,
+ "accord": {
+  "decision": 1.0,
+  "statut": 1.0,
+  "ensemble": 1.0,
+  "profil": 1.0,
+  "hors_sujet": 1.0,
+  "A": 1.0,
+  "B": 1.0,
+  "C": 1.0
+ },
+ "ecart_score_hors_sujet_max": 0.07999999999999996,
+ "ecart_diametre_mm_max": 0.10000000000000142,
+ "ecart_surface_max": 0.0,
+ "temps_ms_median": 1188.1299999952316,
+ "document_refuse": true,
+ "requetes_non_GET_pendant_les_analyses": 0
+}
