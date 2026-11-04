@@ -24,6 +24,10 @@ const sinc = (x: number) => (x === 0 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x)
 const FILTRES = {
   lanczos: { support: 3, f: (x: number) => (x > -3 && x < 3 ? sinc(x) * sinc(x / 3) : 0) },
   bilineaire: { support: 1, f: (x: number) => { const a = Math.abs(x); return a < 1 ? 1 - a : 0 } },
+  bicubique: { support: 2, f: (x: number) => {
+    const a = Math.abs(x)
+    return a < 1 ? (1.5 * a - 2.5) * a * a + 1 : a < 2 ? (((a - 5) * a + 8) * a - 4) * -0.5 : 0
+  } },
 }
 const PRECISION = 22                                // bits de la virgule fixe de Pillow (32 - 8 - 2)
 const UN = 2 ** PRECISION
@@ -90,6 +94,45 @@ export function redimensionner(src: Uint8Array, l: number, h: number, L: number,
   return out
 }
 
+export interface RegleRecadrage { cote_analyse: number; coin: number; seuil_coins: number; seuil_clair: number; part_claire_min: number; marge: number }
+export type Cadre = [number, number, number, number]                  // x0, y0, x1, y1 (comme Pillow)
+
+/** Champ du dermoscope : carré inscrit dans la zone claire quand les coins sont noirs, sinon null.
+ *  Reproduit zone_utile() du moteur Python (gris de Pillow, réduction bicubique). */
+export function zoneUtile(im: ImageRGB, r: RegleRecadrage): Cadre | null {
+  const { largeur: W, hauteur: H, pixels } = im
+  const gris = new Uint8Array(W * H)
+  for (let i = 0; i < W * H; i++) {
+    gris[i] = (pixels[3 * i] * 19595 + pixels[3 * i + 1] * 38470 + pixels[3 * i + 2] * 7471 + 0x8000) >>> 16
+  }
+  const n = r.cote_analyse, s = r.coin
+  const g = redimensionner(gris, W, H, n, n, 1, 'bicubique')
+  const moyenne = (y0: number, x0: number) => {
+    let t = 0
+    for (let y = y0; y < y0 + s; y++) for (let x = x0; x < x0 + s; x++) t += g[y * n + x]
+    return t / (s * s)
+  }
+  const coins = (moyenne(0, 0) + moyenne(0, n - s) + moyenne(n - s, 0) + moyenne(n - s, n - s)) / 4
+  if (coins >= r.seuil_coins) return null
+  let nb = 0, sy = 0, sx = 0
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (g[y * n + x] > r.seuil_clair) { nb++; sy += y; sx += x }
+  const part = nb / (n * n)
+  if (part < r.part_claire_min) return null
+  const cy = sy / nb / n, cx = sx / nb / n
+  const c = Math.sqrt(part / Math.PI) * Math.SQRT2 * r.marge
+  return [Math.trunc(Math.max(0, cx - c / 2) * W), Math.trunc(Math.max(0, cy - c / 2) * H),
+    Math.trunc(Math.min(1, cx + c / 2) * W), Math.trunc(Math.min(1, cy + c / 2) * H)]
+}
+
+export function recadrer(im: ImageRGB, [x0, y0, x1, y1]: Cadre): ImageRGB {
+  const largeur = x1 - x0, hauteur = y1 - y0
+  const pixels = new Uint8Array(largeur * hauteur * 3)
+  for (let y = 0; y < hauteur; y++) {
+    pixels.set(im.pixels.subarray(((y0 + y) * im.largeur + x0) * 3, ((y0 + y) * im.largeur + x1) * 3), y * largeur * 3)
+  }
+  return { largeur, hauteur, pixels }
+}
+
 export function reduire(im: ImageRGB, coteMax: number): ImageRGB {
   const e = Math.min(1, coteMax / Math.max(im.largeur, im.hauteur))
   const largeur = Math.max(1, arrondiPython(im.largeur * e)), hauteur = Math.max(1, arrondiPython(im.hauteur * e))
@@ -118,11 +161,18 @@ export async function versJpeg(im: ImageRGB, qualite = 0.88): Promise<Blob> {
 // Palette séquentielle de la carte Grad-CAM (identique au moteur Python)
 const PALETTE = [[0, 0, 4], [87, 16, 110], [188, 55, 84], [249, 142, 9], [252, 255, 164]]
 
-/** Superpose la carte (288×288, valeurs dans [0, 1]) à l'image, aux proportions de celle-ci. */
-export function superposerCarte(base: ImageRGB, carte: Float32Array, cote: number, opacite = 0.45): ImageRGB {
+/** Superpose la carte (288×288, valeurs dans [0, 1]) à l'image, aux proportions de celle-ci.
+ *  `cadre` (coordonnées de `base`) : partie analysée quand l'image a été recadrée ; la carte est nulle ailleurs. */
+export function superposerCarte(base: ImageRGB, carte: Float32Array, cote: number, opacite = 0.45, cadre: Cadre | null = null): ImageRGB {
   const octets = new Uint8Array(carte.length)
   for (let i = 0; i < carte.length; i++) octets[i] = Math.trunc(carte[i] * 255)
-  const c = redimensionner(octets, cote, cote, base.largeur, base.hauteur, 1, 'bilineaire')
+  const [x0, y0, x1, y1] = cadre ?? [0, 0, base.largeur, base.hauteur]
+  const l = Math.max(1, x1 - x0), h = Math.max(1, y1 - y0)
+  const partielle = redimensionner(octets, cote, cote, l, h, 1, 'bilineaire')
+  const c = new Uint8Array(base.largeur * base.hauteur)
+  for (let y = 0; y < Math.min(h, base.hauteur - y0); y++) {
+    c.set(partielle.subarray(y * l, y * l + Math.min(l, base.largeur - x0)), (y0 + y) * base.largeur + x0)
+  }
   const pixels = new Uint8Array(base.pixels.length)
   for (let i = 0; i < c.length; i++) {
     const x = (c[i] / 255) * (PALETTE.length - 1)

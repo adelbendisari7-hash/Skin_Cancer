@@ -1,0 +1,5 @@
+profil,version,F1 macro,AUC OvR macro,AUC mel,Exactitude équilibrée,regle_satisfaite_par_v3
+complet,v2,0.7214,0.972,0.9276,0.7067,True
+complet,v3,0.7813,0.9745,0.9366,0.7715,True
+sans_contexte,v2,0.6799,0.971,0.9279,0.6766,True
+sans_contexte,v3,0.7529,0.9716,0.9285,0.7388,True

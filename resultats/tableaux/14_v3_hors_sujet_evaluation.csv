@@ -1,0 +1,25 @@
+variante,jeu,moitie,n,rejet
+derniere,validation (fixe le seuil),,2721,0.0051
+derniere,tests HAM10000 + BCN20000 (dermoscopie),,2756,0.0087
+derniere,fonds d'écran Windows,développement,18,0.2778
+derniere,fonds d'écran Windows,évaluation,18,0.3333
+derniere,illustrations de Windows,développement,5,0.2
+derniere,illustrations de Windows,évaluation,5,0.4
+derniere,captures d'écran de l'application,développement,5,0.2
+derniere,captures d'écran de l'application,évaluation,4,0.0
+derniere,"photos et images scientifiques (scikit-image, matplotlib)",développement,12,0.25
+derniere,"photos et images scientifiques (scikit-image, matplotlib)",évaluation,11,0.3636
+derniere,"images synthétiques (documents, aplats, bruit, dégradés)",développement,18,0.9444
+derniere,"images synthétiques (documents, aplats, bruit, dégradés)",évaluation,17,0.8235
+toutes,validation (fixe le seuil),,2721,0.0051
+toutes,tests HAM10000 + BCN20000 (dermoscopie),,2756,0.0044
+toutes,fonds d'écran Windows,développement,18,0.9444
+toutes,fonds d'écran Windows,évaluation,18,0.8889
+toutes,illustrations de Windows,développement,5,0.6
+toutes,illustrations de Windows,évaluation,5,0.8
+toutes,captures d'écran de l'application,développement,5,1.0
+toutes,captures d'écran de l'application,évaluation,4,1.0
+toutes,"photos et images scientifiques (scikit-image, matplotlib)",développement,12,0.8333
+toutes,"photos et images scientifiques (scikit-image, matplotlib)",évaluation,11,0.5455
+toutes,"images synthétiques (documents, aplats, bruit, dégradés)",développement,18,1.0
+toutes,"images synthétiques (documents, aplats, bruit, dégradés)",évaluation,17,1.0

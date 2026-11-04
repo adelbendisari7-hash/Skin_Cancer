@@ -14,8 +14,9 @@ from dermia.config import BUNDLE_DIR, DEVICE
 from dermia.engine import BundleError, Contexte, Moteur
 
 ICI = Path(__file__).parent
-HAM_DIR = Path(os.environ.get("HAM_DIR", ICI.parents[2] / "HAM10000"))
-REF = json.loads((ICI / "reference_ham10000.json").read_text(encoding="utf-8"))["cas"]
+DOSSIERS = {"HAM10000": Path(os.environ.get("HAM_DIR", ICI.parents[2] / "HAM10000")),
+            "BCN20000": Path(os.environ.get("BCN_DIR", ICI.parents[2] / "BCN20000"))}
+REF = json.loads((ICI / "reference_v3.json").read_text(encoding="utf-8"))["cas"]
 
 
 @pytest.fixture(scope="session")
@@ -23,14 +24,16 @@ def moteur() -> Moteur:
     return Moteur(BUNDLE_DIR, device=DEVICE)
 
 
-@pytest.mark.skipif(not HAM_DIR.exists(), reason="images HAM10000 absentes (variable HAM_DIR)")
 @pytest.mark.parametrize("cas", REF, ids=[c["image_id"] for c in REF])
 def test_non_regression(moteur: Moteur, cas: dict):
-    """Les probabilités de l'application = celles du rapport (même pipeline).
+    """Les probabilités de l'application = celles du rapport (même pipeline, recadrage et zones compris).
 
     Référence calculée en demi-précision sur GPU : tolérance 2·10⁻³ sur GPU, 10⁻² sur processeur (float32).
     """
-    image = Image.open(HAM_DIR / cas["fichier"])
+    dossier = DOSSIERS[cas["source"]]
+    if not dossier.exists():
+        pytest.skip(f"images {cas['source']} absentes ({dossier})")
+    image = Image.open(dossier / cas["fichier"])
     ctx = Contexte(cas["age"], cas["sexe"], cas["localisation"])
     res, _ = moteur.analyser(image, ctx)
     assert res.profil == cas["profil"]
@@ -73,3 +76,22 @@ def test_gradcam_et_et_si(moteur: Moteur):
 def test_rapport_cout_non_calibre(moteur: Moteur):
     with pytest.raises(ValueError):
         moteur.analyser(Image.new("RGB", (300, 300)), Contexte(50, "male", "back"), rapport_cout=7)
+
+
+def test_localisation_detaillee_ramenee_a_sa_zone(moteur: Moteur):
+    """L'interface envoie la localisation détaillée ; le réseau v3 voit la zone commune (dos → tronc)."""
+    assert moteur.zone("back") == moteur.zone("chest") == "tronc" and moteur.zone("tronc") == "tronc"
+    assert moteur.zone("n'importe quoi") == "unknown"
+    z1 = moteur.encoder_contexte(Contexte(55, "male", "back"))
+    z2 = moteur.encoder_contexte(Contexte(55, "male", "tronc"))
+    assert (z1 == z2).all()
+
+
+def test_recadrage_du_champ_du_dermoscope(moteur: Moteur):
+    """Coins noirs autour d'un disque clair → seule la partie utile est analysée ; image normale → entière."""
+    from PIL import ImageDraw
+    im = Image.new("RGB", (800, 600), (0, 0, 0))
+    ImageDraw.Draw(im).ellipse([130, 30, 670, 570], fill=(200, 150, 140))
+    x0, y0, x1, y1 = moteur.cadre(im)
+    assert 130 < x0 < 400 < x1 < 670 and 30 < y0 < 300 < y1 < 570
+    assert moteur.cadre(Image.new("RGB", (600, 450), (190, 140, 130))) is None

@@ -11,12 +11,15 @@ interface Profil {
   thresholds: Record<string, number>
   conformal_q: number[]
   poids: { sha256: string }[]
-  metriques_test: {
-    decision_classique: Record<string, number>
-    decision_cout_R10: Record<string, number>
-    abstention: Record<string, number>
-    n_images_test: number
-  }
+  metriques_test: Mesures
+  metriques_test_bcn?: Mesures
+}
+interface Mesures {
+  decision_classique: Record<string, number>
+  decision_cout_R10: Record<string, number>
+  abstention: Record<string, number>
+  n_images_test: number
+  jeu?: string
 }
 interface Fiche {
   nom: string; version: string; date: string; description: string; statut: string; usage_prevu: string
@@ -57,6 +60,9 @@ export function Modele() {
   const nomProfil = (k: string) => (k === 'complet' ? t('mod.profil.complet') : t('mod.profil.sans_contexte'))
   const archi = profils[0][1].architecture ?? 'efficientnet_b0'
   const ev = f.hors_sujet?.evaluation
+  // Un tableau par jeu de test (le paquet v3 est mesuré séparément sur HAM10000 et sur BCN20000)
+  const jeux = (['metriques_test', 'metriques_test_bcn'] as const).filter((j) => profils[0][1][j])
+  const nomJeu = (m: Mesures) => (m.jeu ?? 'test HAM10000').replace(/^test /, '')
 
   return (
     <>
@@ -87,42 +93,9 @@ export function Modele() {
 
       <Panneau titre={t('mod.perfs')} className="mt-6">
         <p className="mb-4 max-w-prose text-[14px] text-encre-2">{t('mod.perfsIntro', { n: profils[0][1].metriques_test.n_images_test })}</p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[620px] text-start text-[14px]">
-            <thead className="border-b border-trait text-[13px] text-encre-2">
-              <tr><th className="py-2 pe-4 text-start font-semibold">{t('mod.mesure')}</th>
-                {profils.map(([k]) => <th key={k} colSpan={2} className="px-4 text-start font-semibold">{nomProfil(k)}</th>)}</tr>
-              <tr className="text-[12.5px]"><th />
-                {profils.map(([k]) => [<th key={k + 'a'} className="px-4 py-1 text-start font-normal">{t('mod.classePlusProbable')}</th>,
-                  <th key={k + 'b'} className="px-4 py-1 text-start font-normal">{t('mod.reglePrudence')}</th>])}</tr>
-            </thead>
-            <tbody className="chiffres divide-y divide-trait-2">
-              {LIGNES.map(([cle, libelle, fmt]) => (
-                <tr key={cle}><td className="py-2 pe-4">{t(libelle)}</td>
-                  {profils.map(([k, p]) => [
-                    <td key={k + 'a'} className="px-4">{fmt(p.metriques_test.decision_classique[cle])}</td>,
-                    <td key={k + 'b'} className="px-4">{fmt(p.metriques_test.decision_cout_R10[cle])}</td>])}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <h3 className="mt-6 mb-2 text-[15px] font-bold">{t('mod.abstention')}</h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {profils.map(([k, p]) => {
-            const ab = p.metriques_test.abstention
-            return (
-              <dl key={k} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-[5px] border border-trait-2 px-4 py-3 text-[14px]">
-                <dt className="col-span-2 mb-1 font-bold">{nomProfil(k)}</dt>
-                <dt className="text-encre-2">{t('mod.traites')}</dt><dd className="chiffres">{pourcent(ab.taux_traite, 0)}</dd>
-                <dt className="text-encre-2">{t('mod.couverture', { c: pourcent(1 - f.abstention.alpha, 0) })}</dt><dd className="chiffres">{pourcent(ab['couverture'], 1)}</dd>
-                <dt className="text-encre-2">{t('mod.couvMel')}</dt><dd className="chiffres">{pourcent(ab['couverture mel'], 1)}</dd>
-                <dt className="text-encre-2">{t('mod.melSilence')}</dt><dd className="chiffres">{t('commun.surN', { a: ab.melanomes_manques_en_silence, b: ab.melanomes_test })}</dd>
-                <dt className="text-encre-2">{t('mod.malinsOrientes')}</dt><dd className="chiffres">{pourcent(ab.sensibilite_malin_triage)}</dd>
-              </dl>
-            )
-          })}
-        </div>
+        {jeux.map((j) => <PerformancesJeu key={j} mesures={profils.map(([k, p]) => [k, p[j]!] as [string, Mesures])}
+          titre={jeux.length > 1 ? t('mod.jeuTest', { jeu: nomJeu(profils[0][1][j]!), n: profils[0][1][j]!.n_images_test }) : null}
+          nomProfil={nomProfil} alpha={f.abstention.alpha} />)}
       </Panneau>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -154,5 +127,51 @@ export function Modele() {
         {t('mod.integrite', { liste: profils.flatMap(([, p]) => p.poids.map((w) => w.sha256.slice(0, 16) + '…')).join(' ') })}
       </p>
     </>
+  )
+}
+
+function PerformancesJeu({ mesures, titre, nomProfil, alpha }: {
+  mesures: [string, Mesures][]; titre: string | null; nomProfil: (k: string) => string; alpha: number
+}) {
+  return (
+    <div className="mb-6 last:mb-0">
+      {titre && <h3 className="mb-2 text-[15px] font-bold">{titre}</h3>}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[620px] text-start text-[14px]">
+          <thead className="border-b border-trait text-[13px] text-encre-2">
+            <tr><th className="py-2 pe-4 text-start font-semibold">{t('mod.mesure')}</th>
+              {mesures.map(([k]) => <th key={k} colSpan={2} className="px-4 text-start font-semibold">{nomProfil(k)}</th>)}</tr>
+            <tr className="text-[12.5px]"><th />
+              {mesures.map(([k]) => [<th key={k + 'a'} className="px-4 py-1 text-start font-normal">{t('mod.classePlusProbable')}</th>,
+                <th key={k + 'b'} className="px-4 py-1 text-start font-normal">{t('mod.reglePrudence')}</th>])}</tr>
+          </thead>
+          <tbody className="chiffres divide-y divide-trait-2">
+            {LIGNES.map(([cle, libelle, fmt]) => (
+              <tr key={cle}><td className="py-2 pe-4">{t(libelle)}</td>
+                {mesures.map(([k, m]) => [
+                  <td key={k + 'a'} className="px-4">{fmt(m.decision_classique[cle])}</td>,
+                  <td key={k + 'b'} className="px-4">{fmt(m.decision_cout_R10[cle])}</td>])}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <h3 className="mt-6 mb-2 text-[15px] font-bold">{t('mod.abstention')}</h3>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {mesures.map(([k, m]) => {
+          const ab = m.abstention
+          return (
+            <dl key={k} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-[5px] border border-trait-2 px-4 py-3 text-[14px]">
+              <dt className="col-span-2 mb-1 font-bold">{nomProfil(k)}</dt>
+              <dt className="text-encre-2">{t('mod.traites')}</dt><dd className="chiffres">{pourcent(ab.taux_traite, 0)}</dd>
+              <dt className="text-encre-2">{t('mod.couverture', { c: pourcent(1 - alpha, 0) })}</dt><dd className="chiffres">{pourcent(ab['couverture'], 1)}</dd>
+              <dt className="text-encre-2">{t('mod.couvMel')}</dt><dd className="chiffres">{pourcent(ab['couverture mel'], 1)}</dd>
+              <dt className="text-encre-2">{t('mod.melSilence')}</dt><dd className="chiffres">{t('commun.surN', { a: ab.melanomes_manques_en_silence, b: ab.melanomes_test })}</dd>
+              <dt className="text-encre-2">{t('mod.malinsOrientes')}</dt><dd className="chiffres">{pourcent(ab.sensibilite_malin_triage)}</dd>
+            </dl>
+          )
+        })}
+      </div>
+    </div>
   )
 }

@@ -59,7 +59,12 @@ def profile_card(exp: str, key: str, df) -> tuple[dict, dict]:
     (pv, yv, _), (pc, yc, _), (pt, yt, _) = e["val"], e["calib"], e["test"]
     thresholds = {str(R): tune_mel_threshold(pv, yv, R)[0] for R in C.COST_RATIOS}
     cf = Conformal("mondrian", C.ALPHA).fit(pc, yc)
-    # ---- mesures sur le test (une seule fois, pour la fiche du modèle)
+    calib = {"thresholds": thresholds, "conformal_q": [float(q) for q in cf.q]}
+    return calib, metriques_fiche(pt, yt, thresholds, cf)
+
+
+def metriques_fiche(pt: np.ndarray, yt: np.ndarray, thresholds: dict, cf: Conformal) -> dict:
+    """Mesures d'un jeu de test pour la fiche du modèle (calculées une seule fois)."""
     R = C.DEFAULT_COST_RATIO
     pred = decide(pt, thresholds[str(R)])
     sets = cf.sets(pt)
@@ -83,8 +88,7 @@ def profile_card(exp: str, key: str, df) -> tuple[dict, dict]:
         },
         "n_images_test": int(len(yt)),
     }
-    calib = {"thresholds": thresholds, "conformal_q": [float(q) for q in cf.q]}
-    return calib, metrics
+    return metrics
 
 
 def write_reference(df, n_per_class: int = 4) -> None:

@@ -1,0 +1,537 @@
+{
+ "description": "Probabilités attendues (projet/resultats/predictions, ham10000-bcn20000-m5-v3), images des jeux de test HAM10000 et BCN20000",
+ "cas": [
+  {
+   "image_id": "ISIC_0032285",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0032285.jpg",
+   "age": 45.0,
+   "sexe": "female",
+   "localisation": "abdomen",
+   "dx": "nv",
+   "profil": "complet",
+   "probabilites": [
+    0.999887,
+    0.000113,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0030043",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0030043.jpg",
+   "age": 45.0,
+   "sexe": "female",
+   "localisation": "unknown",
+   "dx": "nv",
+   "profil": "sans_contexte",
+   "probabilites": [
+    0.999873,
+    0.0,
+    0.000113,
+    0.0,
+    0.0,
+    1.3e-05,
+    1e-06
+   ]
+  },
+  {
+   "image_id": "ISIC_0028773",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_1/ISIC_0028773.jpg",
+   "age": 70.0,
+   "sexe": "male",
+   "localisation": "abdomen",
+   "dx": "mel",
+   "profil": "complet",
+   "probabilites": [
+    0.028361,
+    0.971607,
+    3.2e-05,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0027769",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_1/ISIC_0027769.jpg",
+   "age": 70.0,
+   "sexe": "male",
+   "localisation": "unknown",
+   "dx": "mel",
+   "profil": "sans_contexte",
+   "probabilites": [
+    0.214314,
+    0.757844,
+    0.023182,
+    0.004415,
+    0.00015,
+    7e-05,
+    2.4e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0024358",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_1/ISIC_0024358.jpg",
+   "age": 60.0,
+   "sexe": "female",
+   "localisation": "back",
+   "dx": "bkl",
+   "profil": "complet",
+   "probabilites": [
+    0.246141,
+    0.133758,
+    0.619977,
+    2.4e-05,
+    3.7e-05,
+    2.8e-05,
+    3.5e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0029897",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0029897.jpg",
+   "age": 80.0,
+   "sexe": "female",
+   "localisation": "unknown",
+   "dx": "bkl",
+   "profil": "sans_contexte",
+   "probabilites": [
+    0.488213,
+    0.10638,
+    0.401941,
+    0.001379,
+    0.000739,
+    0.000302,
+    0.001045
+   ]
+  },
+  {
+   "image_id": "ISIC_0031527",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0031527.jpg",
+   "age": 80.0,
+   "sexe": "female",
+   "localisation": "scalp",
+   "dx": "bcc",
+   "profil": "complet",
+   "probabilites": [
+    0.149776,
+    0.003679,
+    0.093793,
+    0.652141,
+    0.004148,
+    0.096358,
+    0.000104
+   ]
+  },
+  {
+   "image_id": "ISIC_0030233",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0030233.jpg",
+   "age": 80.0,
+   "sexe": "male",
+   "localisation": "chest",
+   "dx": "bcc",
+   "profil": "complet",
+   "probabilites": [
+    0.012368,
+    0.005439,
+    0.035968,
+    0.492344,
+    0.453763,
+    6.6e-05,
+    5.2e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0027896",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_1/ISIC_0027896.jpg",
+   "age": 75.0,
+   "sexe": "male",
+   "localisation": "hand",
+   "dx": "akiec",
+   "profil": "complet",
+   "probabilites": [
+    2e-06,
+    4e-06,
+    0.001108,
+    6.9e-05,
+    0.998816,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0029059",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_1/ISIC_0029059.jpg",
+   "age": 80.0,
+   "sexe": "female",
+   "localisation": "lower extremity",
+   "dx": "akiec",
+   "profil": "complet",
+   "probabilites": [
+    0.000137,
+    9e-06,
+    0.079356,
+    0.916414,
+    0.004046,
+    1e-06,
+    3.7e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0030606",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0030606.jpg",
+   "age": 0.0,
+   "sexe": "female",
+   "localisation": "abdomen",
+   "dx": "vasc",
+   "profil": "complet",
+   "probabilites": [
+    0.000478,
+    4.6e-05,
+    1e-06,
+    8e-06,
+    0.0,
+    0.999467,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0034196",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0034196.jpg",
+   "age": 80.0,
+   "sexe": "male",
+   "localisation": "lower extremity",
+   "dx": "vasc",
+   "profil": "complet",
+   "probabilites": [
+    0.041366,
+    0.003047,
+    0.130985,
+    0.158861,
+    0.25801,
+    0.4072,
+    0.000532
+   ]
+  },
+  {
+   "image_id": "ISIC_0033790",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0033790.jpg",
+   "age": 50.0,
+   "sexe": "male",
+   "localisation": "lower extremity",
+   "dx": "df",
+   "profil": "complet",
+   "probabilites": [
+    0.262075,
+    0.051322,
+    3.5e-05,
+    0.0,
+    0.0,
+    1e-06,
+    0.686567
+   ]
+  },
+  {
+   "image_id": "ISIC_0031372",
+   "source": "HAM10000",
+   "fichier": "HAM10000_images_part_2/ISIC_0031372.jpg",
+   "age": 50.0,
+   "sexe": "male",
+   "localisation": "lower extremity",
+   "dx": "df",
+   "profil": "complet",
+   "probabilites": [
+    0.029921,
+    0.301026,
+    0.064613,
+    0.022668,
+    0.007714,
+    0.000172,
+    0.573887
+   ]
+  },
+  {
+   "image_id": "ISIC_0066270",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0066270.jpg",
+   "age": 55.0,
+   "sexe": "male",
+   "localisation": "tronc",
+   "dx": "nv",
+   "profil": "complet",
+   "probabilites": [
+    0.362962,
+    0.335787,
+    0.300369,
+    0.000412,
+    0.000179,
+    0.000212,
+    7.9e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0053683",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0053683.jpg",
+   "age": 60.0,
+   "sexe": "male",
+   "localisation": "unknown",
+   "dx": "nv",
+   "profil": "sans_contexte",
+   "probabilites": [
+    0.834005,
+    0.061971,
+    0.094264,
+    0.007756,
+    0.00184,
+    6e-06,
+    0.000159
+   ]
+  },
+  {
+   "image_id": "ISIC_0060827",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0060827.jpg",
+   "age": 60.0,
+   "sexe": "female",
+   "localisation": "autre",
+   "dx": "mel",
+   "profil": "complet",
+   "probabilites": [
+    0.025957,
+    0.97247,
+    0.001502,
+    2e-06,
+    0.0,
+    6.9e-05,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0070313",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0070313.jpg",
+   "age": 85.0,
+   "sexe": "male",
+   "localisation": "membre_sup",
+   "dx": "mel",
+   "profil": "complet",
+   "probabilites": [
+    0.085358,
+    0.700077,
+    0.046584,
+    0.028435,
+    0.139417,
+    5.3e-05,
+    7.5e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0054165",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0054165.jpg",
+   "age": 60.0,
+   "sexe": "male",
+   "localisation": "tronc",
+   "dx": "bkl",
+   "profil": "complet",
+   "probabilites": [
+    0.038271,
+    0.006738,
+    0.954933,
+    4.7e-05,
+    3e-06,
+    8e-06,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0054983",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0054983.jpg",
+   "age": null,
+   "sexe": "unknown",
+   "localisation": "tronc",
+   "dx": "bkl",
+   "profil": "sans_contexte",
+   "probabilites": [
+    0.011545,
+    0.000183,
+    0.176415,
+    0.792065,
+    0.019662,
+    8.3e-05,
+    4.7e-05
+   ]
+  },
+  {
+   "image_id": "ISIC_0056365",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0056365.jpg",
+   "age": 55.0,
+   "sexe": "male",
+   "localisation": "tronc",
+   "dx": "bcc",
+   "profil": "complet",
+   "probabilites": [
+    0.019912,
+    0.001024,
+    0.000591,
+    0.978212,
+    0.000141,
+    0.00012,
+    1e-06
+   ]
+  },
+  {
+   "image_id": "ISIC_0053813",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0053813.jpg",
+   "age": null,
+   "sexe": "unknown",
+   "localisation": "tete_cou",
+   "dx": "bcc",
+   "profil": "sans_contexte",
+   "probabilites": [
+    5.5e-05,
+    0.00169,
+    0.032285,
+    0.362424,
+    0.603459,
+    7.9e-05,
+    8e-06
+   ]
+  },
+  {
+   "image_id": "ISIC_0069931",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0069931.jpg",
+   "age": 60.0,
+   "sexe": "male",
+   "localisation": "tronc",
+   "dx": "akiec",
+   "profil": "complet",
+   "probabilites": [
+    0.06125,
+    0.717518,
+    0.037003,
+    0.003807,
+    0.180414,
+    1e-06,
+    7e-06
+   ]
+  },
+  {
+   "image_id": "ISIC_0055574",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0055574.jpg",
+   "age": 75.0,
+   "sexe": "male",
+   "localisation": "unknown",
+   "dx": "akiec",
+   "profil": "sans_contexte",
+   "probabilites": [
+    1e-06,
+    2e-06,
+    8e-06,
+    4e-06,
+    0.999984,
+    1e-06,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0063701",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0063701.jpg",
+   "age": 45.0,
+   "sexe": "male",
+   "localisation": "tete_cou",
+   "dx": "vasc",
+   "profil": "complet",
+   "probabilites": [
+    0.001365,
+    4e-06,
+    0.0,
+    9e-06,
+    0.0,
+    0.99862,
+    1e-06
+   ]
+  },
+  {
+   "image_id": "ISIC_0054903",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0054903.jpg",
+   "age": 25.0,
+   "sexe": "female",
+   "localisation": "tronc",
+   "dx": "vasc",
+   "profil": "complet",
+   "probabilites": [
+    0.000292,
+    0.0,
+    0.0,
+    2e-06,
+    0.0,
+    0.999705,
+    0.0
+   ]
+  },
+  {
+   "image_id": "ISIC_0073112",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0073112.jpg",
+   "age": 85.0,
+   "sexe": "female",
+   "localisation": "tronc",
+   "dx": "df",
+   "profil": "complet",
+   "probabilites": [
+    0.003408,
+    0.000469,
+    0.001674,
+    0.892379,
+    0.036356,
+    0.000122,
+    0.065591
+   ]
+  },
+  {
+   "image_id": "ISIC_0067025",
+   "source": "BCN20000",
+   "fichier": "ISIC-images/ISIC_0067025.jpg",
+   "age": 85.0,
+   "sexe": "female",
+   "localisation": "tronc",
+   "dx": "df",
+   "profil": "complet",
+   "probabilites": [
+    0.001598,
+    0.000253,
+    0.009051,
+    0.973303,
+    0.012764,
+    0.00045,
+    0.002581
+   ]
+  }
+ ]
+}

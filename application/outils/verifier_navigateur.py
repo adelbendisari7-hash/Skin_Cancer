@@ -1,7 +1,7 @@
 """Vérifie que le moteur du navigateur reproduit le moteur Python sur de vraies images.
 
-Lance la version Vercel construite dans un vrai Chrome (COOP/COEP comme en production), analyse des images du jeu de
-test HAM10000 et des images hors sujet, puis compare aux résultats du moteur PyTorch (CPU, float32) : probabilités,
+Lance la version Vercel construite dans un vrai Chrome (COOP/COEP comme en production), analyse des images des jeux de
+test HAM10000 et BCN20000 (dont des images recadrées au champ du dermoscope) et une image hors sujet, puis compare aux résultats du moteur PyTorch (CPU, float32) : probabilités,
 décision, orientation, ensemble conforme, refus hors sujet, critères ABCD. Écrit docs/verification_navigateur.json.
 
 Usage : python outils/verifier_navigateur.py <dossier dist construit avec VITE_DEMO_STATIQUE=1> [--n 70]
@@ -28,7 +28,7 @@ sys.path.insert(0, str(APP / "backend"))
 sys.path.insert(0, str(APP.parent))
 from dermia.engine import Contexte, Moteur, abcd  # noqa: E402
 
-BUNDLE = APP / "modeles" / "ham10000-m5-v2"
+BUNDLE = APP / "modeles" / "ham10000-bcn20000-m5-v3"
 
 
 class Serveur(http.server.SimpleHTTPRequestHandler):
@@ -64,10 +64,14 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=70)
     args = ap.parse_args()
     from src.data import get_split
-    df = get_split()
+    from src.donnees_v3 import get_split_v3
+    df = get_split_v3()
+    detail = get_split().set_index("image_id").localization       # HAM : localisation détaillée de l'interface
+    df["localization"] = df.image_id.map(detail).fillna(df.localization)
     test = df[df.split == "test"].copy()
-    par_classe = max(3, args.n // 7)
-    cas = test.groupby("dx", group_keys=False).apply(lambda g: g.sample(min(len(g), par_classe), random_state=0)).head(args.n + 7)
+    par_classe = max(2, args.n // 14)
+    melange = test.sample(frac=1, random_state=0)
+    cas = melange[melange.groupby(["source", "dx"]).cumcount() < par_classe].sort_values(["source", "dx"])
 
     moteur = Moteur(BUNDLE, device="cpu")
     attendus = []
@@ -77,8 +81,8 @@ def main() -> None:
         im = Image.open(r.path)
         res, _ = moteur.analyser(im, ctx)
         m = abcd.publiable(abcd.mesurer(im, 15.0))
-        attendus.append({"image": r.image_id, "chemin": str(r.path), "ctx": {"age": age, "sexe": r.sex, "localisation": r.localization},
-                         "res": res, "abcd": m})
+        attendus.append({"image": r.image_id, "source": r.source, "recadree": moteur.cadre(im) is not None, "chemin": str(r.path),
+                         "ctx": {"age": age, "sexe": r.sex, "localisation": r.localization}, "res": res, "abcd": m})
     print(f"Moteur Python : {len(attendus)} images")
 
     gestion = functools.partial(Serveur, directory=args.dist)
@@ -114,7 +118,7 @@ def main() -> None:
             temps.append(r["ms"])
             ab, ae = r["abcd15"], a["abcd"]
             lignes.append({
-                "image": a["image"], "ecart_p": dp, "decision": r["decision"] == e.decision, "statut": r["statut"] == e.statut,
+                "image": a["image"], "source": a["source"], "recadree": a["recadree"], "ecart_p": dp, "decision": r["decision"] == e.decision, "statut": r["statut"] == e.statut,
                 "ensemble": sorted(r["ensemble_conforme"]) == sorted(e.ensemble_conforme), "profil": r["profil"] == e.profil,
                 "hors_sujet": r["hors_sujet"] == e.hors_sujet, "ecart_score_hs": abs(r["score_hors_sujet"] - e.score_hors_sujet),
                 "A": (ab["A"] or {}).get("score") == (ae["A"] or {}).get("score"), "B": (ab["B"] or {}).get("score") == (ae["B"] or {}).get("score"),
@@ -134,7 +138,11 @@ def main() -> None:
              "accord": {k: round(v, 4) for k, v in t.items()}, "ecart_score_hors_sujet_max": float(max(l["ecart_score_hs"] for l in lignes)),
              "ecart_diametre_mm_max": float(max(l["ecart_D"] for l in lignes)), "ecart_surface_max": float(max(l["surface"] for l in lignes)),
              "temps_ms_median": float(np.median(temps[1:])), "document_refuse": bool(hs.get("refus")),
-             "requetes_non_GET_pendant_les_analyses": len(reseau)}
+             "requetes_non_GET_pendant_les_analyses": len(reseau),
+             "par_source": {s: {"n": sum(l["source"] == s for l in lignes), "recadrees": sum(l["recadree"] for l in lignes if l["source"] == s),
+                                "accord_decision": float(np.mean([l["decision"] for l in lignes if l["source"] == s])),
+                                "ecart_probabilite_max": float(max(l["ecart_p"] for l in lignes if l["source"] == s))}
+                            for s in sorted({l["source"] for l in lignes})}}
     print(json.dumps(bilan, ensure_ascii=False, indent=1))
     pires = sorted(lignes, key=lambda l: -l["ecart_p"])[:3]
     print("pires :", [(l["image"], round(l["ecart_p"], 4)) for l in pires])

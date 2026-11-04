@@ -40,6 +40,10 @@ EXPERIMENTS: dict[str, dict] = {
     "M5_B2": dict(fusion="film", loss="cost", film="final", backbone="efficientnet_b2", taille=288),
     "M5_dropClin_B2": dict(fusion="film", loss="cost", film="final", backbone="efficientnet_b2", taille=288,
                            clin_dropout=C.CLINICAL_DROPOUT_P),
+    # Version 3 (application/docs/plan_v3.md) : même recette que la v2, données HAM10000 + BCN20000.
+    "V3_M5_B2": dict(fusion="film", loss="cost", film="final", backbone="efficientnet_b2", taille=288, donnees="v3"),
+    "V3_M5_dropClin_B2": dict(fusion="film", loss="cost", film="final", backbone="efficientnet_b2", taille=288,
+                              clin_dropout=C.CLINICAL_DROPOUT_P, donnees="v3"),
 }
 
 
@@ -79,13 +83,22 @@ def train(exp: str, seed: int, epochs: int = C.EPOCHS, subset: int | None = None
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.backends.cudnn.benchmark = False   # l'auto-réglage coûte ~90 s par forme de lot ici
 
-    df = get_split()
+    v3 = cfg.get("donnees") == "v3"
+    if v3:
+        from .donnees_v3 import get_split_v3
+        df = get_split_v3()
+    else:
+        df = get_split()
     enc = ClinicalEncoder().fit(df[df.split == "train"])
     clin_np = enc.transform(df)
     clin = torch.from_numpy(clin_np).to(device)
     missing = torch.from_numpy(enc.missing_context(1)).to(device)       # contexte « inconnu »
     taille = cfg.get("taille", C.IMG_SIZE)
-    bank = np.array(build_image_cache(df, taille))                        # copie en RAM (1,5 à 2,5 Go)
+    if v3:                                                                # 6,7 Go : lu sur disque à la demande
+        from .donnees_v3 import cache_v3
+        bank = cache_v3(df, taille)
+    else:
+        bank = np.array(build_image_cache(df, taille))                    # copie en RAM (1,5 à 2,5 Go)
     y_all = df.y.to_numpy().copy()
     split = df.split.to_numpy()
     idx = {s: np.flatnonzero(split == s) for s in ["train", "val", "calib", "test"]}
@@ -179,7 +192,11 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, nargs="+", default=C.TRAIN_SEEDS)
     ap.add_argument("--epochs", type=int, default=C.EPOCHS)
     ap.add_argument("--subset", type=int, default=None)
+    ap.add_argument("--reprendre", action="store_true", help="saute les graines dont les prédictions existent déjà")
     a = ap.parse_args()
     for sd in a.seeds:
+        if a.reprendre and not a.subset and (C.PRED_DIR / f"{a.exp}_s{sd}.npz").exists():
+            print(f"==> {a.exp}_s{sd} déjà entraîné : sauté", flush=True)
+            continue
         r = train(a.exp, sd, a.epochs, a.subset)
         print(f"==> {r['tag']} meilleur F1 macro val = {r['best_val_f1']:.4f}", flush=True)

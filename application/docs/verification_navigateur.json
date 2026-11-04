@@ -1,7 +1,7 @@
 {
  "n_images": 70,
- "ecart_probabilite_max": 0.0037626480177623822,
- "ecart_probabilite_median": 0.0004792674546841638,
+ "ecart_probabilite_max": 0.004606935675844803,
+ "ecart_probabilite_median": 0.00030963137692963105,
  "accord": {
   "decision": 1.0,
   "statut": 1.0,
@@ -12,10 +12,24 @@
   "B": 1.0,
   "C": 1.0
  },
- "ecart_score_hors_sujet_max": 0.07999999999999996,
- "ecart_diametre_mm_max": 0.10000000000000142,
- "ecart_surface_max": 0.0,
- "temps_ms_median": 1188.1299999952316,
+ "ecart_score_hors_sujet_max": 0.09999999999999998,
+ "ecart_diametre_mm_max": 0.10000000000000053,
+ "ecart_surface_max": 0.00010000000000001674,
+ "temps_ms_median": 1372.2600000000093,
  "document_refuse": true,
- "requetes_non_GET_pendant_les_analyses": 0
+ "requetes_non_GET_pendant_les_analyses": 0,
+ "par_source": {
+  "BCN20000": {
+   "n": 35,
+   "recadrees": 15,
+   "accord_decision": 1.0,
+   "ecart_probabilite_max": 0.00390839660938147
+  },
+  "HAM10000": {
+   "n": 35,
+   "recadrees": 2,
+   "accord_decision": 1.0,
+   "ecart_probabilite_max": 0.004606935675844803
+  }
+ }
 }

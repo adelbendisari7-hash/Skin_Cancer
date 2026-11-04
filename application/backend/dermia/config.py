@@ -9,7 +9,7 @@ APP_DIR = Path(__file__).resolve().parents[2]                      # .../applica
 
 NOM_PRODUIT = os.environ.get("DERMIA_NOM", "dermIA")
 DATA_DIR = Path(os.environ.get("DERMIA_DONNEES", APP_DIR / "donnees"))
-BUNDLE_DIR = Path(os.environ.get("DERMIA_MODELE", APP_DIR / "modeles" / "ham10000-m5-v2"))
+BUNDLE_DIR = Path(os.environ.get("DERMIA_MODELE", APP_DIR / "modeles" / "ham10000-bcn20000-m5-v3"))
 FRONTEND_DIR = Path(os.environ.get("DERMIA_INTERFACE", APP_DIR / "frontend" / "dist"))
 HOTE = os.environ.get("DERMIA_HOTE", "127.0.0.1")                  # local uniquement par défaut
 PORT = int(os.environ.get("DERMIA_PORT", "8765"))

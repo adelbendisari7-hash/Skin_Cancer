@@ -14,6 +14,11 @@ critères **ABCD** automatiques, **refus des images hors sujet**, **recalibrage 
 de l'établissement, **sauvegarde et restauration en un clic**, interface et comptes rendus en **français, anglais et
 arabe** (de droite à gauche), modèle plus puissant (EfficientNet-B2, 288 px). Résultats chiffrés : `docs/resultats_v2.md`.
 
+**Version 3 (modèle par défaut depuis le 4 novembre 2026)** : même réseau, entraîné sur HAM10000 **et BCN20000**
+(Barcelone), soit trois centres ; le champ circulaire du dermoscope est recadré avant l'analyse et la localisation est
+ramenée à cinq zones communes aux deux bases. Plan fixé avant l'entraînement : `docs/plan_v3.md` ; résultats :
+`docs/resultats_v3.md`. Le paquet v2 reste disponible (`DERMIA_MODELE=modeles/ham10000-m5-v2`).
+
 Captures d'écran : `docs/captures/` (v1) et `docs/captures/v2/` (3 langues) — images de démonstration HAM10000,
 usage non commercial. **Vidéos** : `docs/video/visite_complete_dermia.mp4` (toutes les fonctions) et
 `docs/video/tutoriel_dermia.mp4` (prise en main). Régénérables avec `python outils/video_complete.py` et
@@ -39,9 +44,10 @@ réseau). `vercel.json` envoie les en-têtes COOP/COEP qui activent le calcul mu
 un seul fil, plus lentement.
 
 Fidélité au moteur PyTorch (`python outils/verifier_navigateur.py <dist>`, résultats dans
-`docs/verification_navigateur.json`) : sur 70 images du jeu de test HAM10000 dans Chrome, décision, orientation,
-ensemble conforme et scores A, B et C identiques dans 100 % des cas, écart de probabilité maximal 0,0038, aucune requête
-d'envoi pendant les analyses, document de test refusé. C'est une vérification de reproduction du moteur, pas une
+`docs/verification_navigateur.json`, modèle v3) : sur 70 images des jeux de test HAM10000 et BCN20000 dans Chrome,
+dont 17 recadrées au champ du dermoscope, décision, orientation, ensemble conforme, refus hors sujet et scores A, B et C
+identiques dans 100 % des cas, écart de probabilité maximal 0,0046, aucune requête d'envoi pendant les analyses, document
+de test refusé. C'est une vérification de reproduction du moteur, pas une
 nouvelle évaluation clinique.
 
 Différences avec l'application installée : pas de compte rendu PDF ni de diamètre (échelle inconnue) sur les analyses
@@ -49,15 +55,16 @@ du visiteur, pas de lecture des TIFF, et aucune administration réelle.
 
 Le moteur serveur complet ne peut pas fonctionner sur Vercel : PyTorch et les poids dépassent la limite de 500 Mo d'une
 fonction Python, et une base SQLite ne survit pas sur un disque non persistant. **Les réseaux ONNX sont publics** (dans
-ce dépôt et téléchargeables depuis le site) : ils restent soumis à la licence non commerciale de HAM10000. Les poids
-PyTorch (`modeles/*/poids`, `hors_sujet.npz`) ne sont pas publiés et se régénèrent avec `python -m src.export_v2`.
+ce dépôt et téléchargeables depuis le site) : ils restent soumis aux licences non commerciales de HAM10000 et
+BCN20000. Les poids PyTorch (`modeles/*/poids`, `hors_sujet.npz`) ne sont pas publiés et se régénèrent avec
+`python -m src.export_v3`.
 
 ## Statut — à lire avant toute démonstration
 
 | | |
 |---|---|
 | **Logiciel** | Code propriétaire du projet : peut être commercialisé. |
-| **Modèle fourni** (`modeles/ham10000-m5-v2` ; v1 conservé) | Entraîné sur HAM10000, **licence CC BY-NC 4.0 : usage non commercial uniquement**. Démonstrations et recherche seulement. |
+| **Modèle fourni** (`modeles/ham10000-bcn20000-m5-v3` ; v1 et v2 conservés) | Entraîné sur HAM10000 et BCN20000, **licences CC BY-NC 4.0 : usage non commercial uniquement**. Démonstrations et recherche seulement. |
 | **Usage clinique** | **Interdit en l'état.** Un logiciel d'aide au diagnostic est un dispositif médical : marquage/enregistrement obligatoire avant toute mise sur le marché (voir la feuille de route). |
 
 L'application affiche ce statut en permanence (bandeau, fiche du modèle, comptes rendus).
@@ -158,15 +165,15 @@ cd frontend; npm install; npm run dev
 ..\.venv\Scripts\python -m pytest
 # Reconstruire l'interface livrée
 cd frontend; npm run build
-# Régénérer le paquet de modèle v2 (choix B0/B2 sur la validation, détecteur hors sujet) et la référence
-cd ..; .venv\Scripts\python -m src.export_v2
+# Régénérer le paquet de modèle v3 (réglages du plan, détecteur hors sujet, fiche) et la référence de non-régression
+cd ..; .venv\Scripts\python -m src.export_v3
 ```
 
 | Variable | Rôle | Défaut |
 |---|---|---|
 | `DERMIA_NOM` | nom du produit affiché | dermIA |
 | `DERMIA_DONNEES` | dossier des données | `application/donnees` |
-| `DERMIA_MODELE` | paquet de modèle à charger | `modeles/ham10000-m5-v2` |
+| `DERMIA_MODELE` | paquet de modèle à charger | `modeles/ham10000-bcn20000-m5-v3` |
 | `DERMIA_SAUVEGARDE_AUTO` | `0` pour désactiver la sauvegarde quotidienne | 1 |
 | `DERMIA_HOTE`, `DERMIA_PORT` | adresse d'écoute | 127.0.0.1, 8765 |
 | `DERMIA_DEVICE` | `cuda` ou `cpu` | automatique |

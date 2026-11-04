@@ -1,7 +1,8 @@
 """Moteur d'IA : charge un paquet de modèle et analyse une image avec son contexte clinique.
 
 Chaîne identique à l'évaluation du rapport :
-image → taille du modèle (LANCZOS) → normalisation ImageNet → 4 retournements (TTA) × 3 graines
+image → [recadrage du champ du dermoscope si le paquet le prévoit] → taille du modèle (LANCZOS)
+→ normalisation ImageNet → 4 retournements (TTA) × 3 graines
 → probabilités moyennes → décision au coût (seuil sur p(mel)) → ensemble conforme Mondrian
 → abstention si l'ensemble n'est pas le singleton {décision} → orientation clinique.
 En plus : score « hors sujet » (distance de Mahalanobis dans l'espace des caractéristiques de
@@ -27,6 +28,27 @@ from .triage import triage
 
 INCONNU = "unknown"
 _NOM_FIL = "dermia-calcul"
+
+
+def zone_utile(im: Image.Image, regle: dict) -> tuple[int, int, int, int] | None:
+    """Carré inscrit dans le cercle du dermoscope quand les coins de l'image sont noirs, sinon None.
+
+    Règle de la version 3 (projet/src/donnees_v3.py, appliquée à l'entraînement) : niveaux de gris réduits
+    en 256 × 256 (bicubique), moyenne des 4 coins de 20 px < seuil → carré inscrit dans la zone claire."""
+    n, s = regle["cote_analyse"], regle["coin"]
+    g = np.asarray(im.convert("L").resize((n, n), Image.BICUBIC), dtype=np.float32)
+    coins = np.mean([g[:s, :s].mean(), g[:s, -s:].mean(), g[-s:, :s].mean(), g[-s:, -s:].mean()])
+    if coins >= regle["seuil_coins"]:
+        return None
+    m = g > regle["seuil_clair"]
+    if m.mean() < regle["part_claire_min"]:
+        return None
+    ys, xs = np.nonzero(m)
+    cy, cx = ys.mean() / n, xs.mean() / n
+    c = np.sqrt(m.mean() / np.pi) * np.sqrt(2) * regle["marge"]
+    W, H = im.size
+    return (int(max(0.0, cx - c / 2) * W), int(max(0.0, cy - c / 2) * H),
+            int(min(1.0, cx + c / 2) * W), int(min(1.0, cy + c / 2) * H))
 
 
 class BundleError(RuntimeError):
@@ -102,8 +124,14 @@ class Moteur:
         self.noms: dict[str, str] = self.m["noms_classes"]
         self.mel = self.m["indice_melanome"]
         enc = self.m["encodeur_clinique"]
-        self.sexes, self.localisations = enc["sexes"], enc["localisations"]
+        self.sexes, self.zones = enc["sexes"], enc["localisations"]
+        # Paquets v3 : le réseau voit des zones communes (tronc, tête et cou…) ; l'interface garde les localisations
+        # détaillées, ramenées à leur zone. Paquets antérieurs : localisation = zone.
+        self.correspondance: dict[str, str] = enc.get("correspondance") or {z: z for z in self.zones}
+        self.localisations: list[str] = list(self.correspondance)
+        self.valeurs_et_si_localisation = [z for z in self.zones if z != INCONNU]
         pre = self.m["pretraitement"]
+        self.recadrage: dict | None = pre.get("recadrage")
         self.taille = pre["taille"]
         self._mean = torch.tensor(pre["moyenne"]).view(1, 3, 1, 1).to(self.device)
         self._std = torch.tensor(pre["ecart_type"]).view(1, 3, 1, 1).to(self.device)
@@ -160,14 +188,28 @@ class Moteur:
         age = enc["age_mediane"] if manquant else float(ctx.age)
         age = (age - enc["age_moyenne"]) / enc["age_ecart_type"]
         sexe = ctx.sexe if ctx.sexe in self.sexes else INCONNU
-        loc = ctx.localisation if ctx.localisation in self.localisations else INCONNU
+        loc = self.zone(ctx.localisation)
         v = [age, float(manquant)] + [float(s == sexe) for s in self.sexes] + \
-            [float(lo == loc) for lo in self.localisations]
+            [float(z == loc) for z in self.zones]
         return torch.tensor([v], dtype=torch.float32, device=self.device)
 
+    def zone(self, localisation: str | None) -> str:
+        """Localisation détaillée (ou zone) → zone vue par le réseau ; « unknown » si elle n'est pas reconnue."""
+        z = self.correspondance.get(localisation, localisation)
+        return z if z in self.zones else INCONNU
+
+    def cadre(self, image: Image.Image) -> tuple[int, int, int, int] | None:
+        """Partie de l'image (orientée) réellement analysée, ou None pour l'image entière."""
+        if not self.recadrage:
+            return None
+        return zone_utile(ImageOps.exif_transpose(image).convert("RGB"), self.recadrage)
+
     def pretraiter(self, image: Image.Image) -> torch.Tensor:
-        """Image PIL → tenseur normalisé (1, 3, 224, 224), comme le cache d'entraînement."""
-        im = ImageOps.exif_transpose(image).convert("RGB").resize((self.taille, self.taille), Image.LANCZOS)
+        """Image PIL → tenseur normalisé (1, 3, taille, taille), comme le cache d'entraînement."""
+        im = ImageOps.exif_transpose(image).convert("RGB")
+        if self.recadrage and (b := zone_utile(im, self.recadrage)):
+            im = im.crop(b)
+        im = im.resize((self.taille, self.taille), Image.LANCZOS)
         # .contiguous() : format mémoire NCHW standard. Sans lui, le permute laisse l'image en NHWC,
         # ce qui fait choisir à cuDNN d'autres noyaux (plus lents ici et non couverts par le préchauffage).
         x = torch.from_numpy(np.asarray(im, dtype=np.uint8).copy()).permute(2, 0, 1).contiguous()[None].float().div(255)
@@ -214,14 +256,14 @@ class Moteur:
             return loc["thresholds"], loc["conformal_q"], f"locale:{loc['id']}"
         return prof["thresholds"], prof["conformal_q"], "origine"
 
-    def prechauffer(self, tailles_lot: tuple[int, ...] = (1, 16, 14)) -> float:
+    def prechauffer(self, tailles_lot: tuple[int, ...] | None = None) -> float:
         """Exécute une fois, dans le fil de calcul, chaque forme de calcul utilisée par l'interface.
 
         Sur GPU, la première exécution d'une nouvelle taille de lot prépare les noyaux cuDNN
-        (~3 à 4 s chacune). Tailles : 1 (analyse, en premier), 16 (« et si » âge), 14 (« et si »
+        (~3 à 4 s chacune). Tailles : 1 (analyse, en premier), 16 (« et si » âge), nombre de zones (« et si »
         localisation). Les deux profils partagent les mêmes noyaux (même architecture) : un seul suffit.
         """
-        return self._executer(self._prechauffer, tailles_lot)
+        return self._executer(self._prechauffer, tailles_lot or (1, 16, len(self.valeurs_et_si_localisation)))
 
     # ------------------------------------------------------------------ inférence (dans le fil de calcul)
     def _profil(self, ctx: Contexte) -> str:
@@ -335,7 +377,7 @@ class Moteur:
     def _prechauffer(self, tailles_lot: tuple[int, ...]) -> float:
         t0 = time.perf_counter()
         x = self.pretraiter(Image.new("RGB", (64, 48), (180, 130, 120)))    # même chemin que les vraies images
-        ctx = Contexte(50, "male", "back")
+        ctx = Contexte(50, "male", self.localisations[0])
         profil = next(iter(self.reseaux))
         for n in tailles_lot:
             self._probas(x, self.encoder_contexte(ctx).expand(n, -1).contiguous(), profil)
@@ -350,7 +392,12 @@ class Moteur:
         echelle = min(1.0, cote_max / max(im.size))
         w, h = max(1, round(im.width * echelle)), max(1, round(im.height * echelle))
         base = np.asarray(im.resize((w, h), Image.LANCZOS), float)
-        carte = np.asarray(Image.fromarray((cam * 255).astype(np.uint8)).resize((w, h), Image.BILINEAR), float) / 255
+        b = self.cadre(im)
+        x0, y0, x1, y1 = (0, 0, w, h) if b is None else (round(b[0] * w / im.width), round(b[1] * h / im.height),
+                                                         round(b[2] * w / im.width), round(b[3] * h / im.height))
+        carte = np.zeros((h, w))                       # la carte couvre la partie analysée, nulle ailleurs
+        carte[y0:y1, x0:x1] = np.asarray(Image.fromarray((cam * 255).astype(np.uint8)).resize(
+            (max(1, x1 - x0), max(1, y1 - y0)), Image.BILINEAR), float)[:y1 - y0, :x1 - x0] / 255
         mix = (1 - opacite) * base + opacite * _colormap(carte)
         buf = io.BytesIO()
         Image.fromarray(mix.clip(0, 255).astype(np.uint8)).save(buf, "PNG")

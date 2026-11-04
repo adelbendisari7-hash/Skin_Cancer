@@ -170,7 +170,8 @@ def images_hors_sujet() -> dict[str, list]:
     return jeux
 
 
-def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path) -> dict:
+def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path, prefixe: str = "12",
+                         nom_test: str = "test HAM10000 (dermoscopie)") -> dict:
     """Deux variantes, seuil fixé dans les deux cas au 99,5e centile de la VALIDATION (images dermoscopiques) :
     - « dernière étape » : Mahalanobis sur les caractéristiques finales du réseau ;
     - « toutes les étapes » (Lee et al. 2018) : Mahalanobis à chaque étape, log-distances centrées-réduites
@@ -205,7 +206,7 @@ def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path) -> dict:
     for v, f in variantes.items():
         lignes.append({"variante": v, "jeu": "validation (fixe le seuil)", "moitie": "", "n": len(va),
                        "rejet": float((f(b_va) > seuils[v]).mean())})
-        lignes.append({"variante": v, "jeu": "test HAM10000 (dermoscopie)", "moitie": "", "n": len(te),
+        lignes.append({"variante": v, "jeu": nom_test, "moitie": "", "n": len(te),
                        "rejet": float((f(b_te) > seuils[v]).mean())})
         for nom, b in ood.items():
             for moitie, sel in (("développement", slice(0, None, 2)), ("évaluation", slice(1, None, 2))):
@@ -213,7 +214,7 @@ def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path) -> dict:
                                "rejet": float((f(b[sel]) > seuils[v]).mean())})
     t = pd.DataFrame(lignes)
     t["rejet"] = t.rejet.round(4)
-    t.to_csv(C.TAB_DIR / "12_hors_sujet_evaluation.csv", index=False, encoding="utf-8")
+    t.to_csv(C.TAB_DIR / f"{prefixe}_hors_sujet_evaluation.csv", index=False, encoding="utf-8")
 
     def rejet_global(v, moitie):
         sel = slice(0, None, 2) if moitie == "développement" else slice(1, None, 2)
@@ -241,7 +242,7 @@ def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path) -> dict:
                             **{f"precision_{e}": g[1].astype(np.float32) for e, g in zip(etages, gauss)})
     else:
         np.savez_compressed(fichier, moyennes=gauss[-1][0].astype(np.float32), precision=gauss[-1][1].astype(np.float32))
-    _figure_scores(f(b_te), np.concatenate([f(b[1::2]) for b in ood.values()]), seuils[choix], choix)
+    _figure_scores(f(b_te), np.concatenate([f(b[1::2]) for b in ood.values()]), seuils[choix], choix, prefixe, nom_test)
     print(f"Hors sujet : {json.dumps(evaluation, ensure_ascii=False)}")
     detecteur_hors_sujet.controle = (list(va.path[:6]), f(b_va)[:6])     # pour la vérification finale
     info = {"fichier": fichier.name, "sha256": sha256(fichier), "seuil": round(seuils[choix], 4), "profil": "complet",
@@ -256,7 +257,7 @@ def detecteur_hors_sujet(moteur: Moteur, df: pd.DataFrame, out: Path) -> dict:
     return info
 
 
-def _figure_scores(s_te, s_hs, seuil, variante) -> None:
+def _figure_scores(s_te, s_hs, seuil, variante, prefixe: str = "12", nom_test: str = "test HAM10000 (dermoscopie)") -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -264,7 +265,7 @@ def _figure_scores(s_te, s_hs, seuil, variante) -> None:
     log = variante == "derniere"
     tous = np.concatenate([s_te, s_hs])
     bins = np.logspace(np.log10(max(tous.min(), 1e-3)), np.log10(tous.max()), 60) if log else np.linspace(tous.min(), tous.max(), 60)
-    ax.hist(s_te, bins=bins, alpha=0.6, label="test HAM10000 (dermoscopie)", color="#0e6a64")
+    ax.hist(s_te, bins=bins, alpha=0.6, label=nom_test, color="#0e6a64")
     ax.hist(s_hs, bins=bins, alpha=0.6, label="images hors sujet (moitié évaluation)", color="#b54708")
     ax.axvline(seuil, color="#b42318", lw=1.5, label=f"seuil ({CENTILE_SEUIL}e centile de la validation)")
     if log:
@@ -274,7 +275,7 @@ def _figure_scores(s_te, s_hs, seuil, variante) -> None:
     ax.legend(frameon=False, fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
-    fig.savefig(C.FIG_DIR / "12_hors_sujet_scores.png")
+    fig.savefig(C.FIG_DIR / f"{prefixe}_hors_sujet_scores.png")
     plt.close(fig)
 
 

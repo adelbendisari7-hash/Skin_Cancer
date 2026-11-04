@@ -189,15 +189,15 @@ def et_si(aid: int, data: EtSi, db: Session = Depends(get_db), _: Utilisateur = 
     """Contrefactuel : même image, âge ou localisation modifiés → p(mélanome) (modèle et seuils actuels)."""
     a = _get(db, aid)
     moteur = service.moteur()
-    valeurs = data.valeurs or (AGES_ET_SI if data.variable == "age"
-                               else [lo for lo in moteur.localisations if lo != "unknown"])
+    valeurs = data.valeurs or (AGES_ET_SI if data.variable == "age" else moteur.valeurs_et_si_localisation)
     if len(valeurs) > 40:
         raise HTTPException(422, "40 valeurs au maximum.")
     im = Image.open(_fichier(a, "image"))
     ctx = Contexte(a.age, a.sexe, a.localisation)
     serie = moteur.et_si(im, ctx, data.variable, valeurs)
     seuils, _, _ = moteur.parametres(moteur._profil(ctx))
-    return {"variable": data.variable, "actuel": getattr(ctx, data.variable), "serie": serie,
+    actuel = ctx.age if data.variable == "age" else moteur.zone(ctx.localisation)
+    return {"variable": data.variable, "actuel": actuel, "serie": serie,
             "seuil_melanome": float(seuils[str(a.rapport_cout)]) if str(a.rapport_cout) in seuils else a.seuil_melanome,
             "meme_modele": a.modele == moteur.nom and a.version_modele == moteur.version}
 

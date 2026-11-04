@@ -136,9 +136,9 @@ T: dict[str, tuple[str, str, str]] = {
         "* المجموعة المطابِقة (طريقة موندريان، ألفا = {alpha}): تحتوي على التشخيص الصحيح باحتمال لا يقل عن "
         "{couv}% لكل فئة، بافتراض أن الحالات تشبه بيانات المعايرة. يُتخذ قرار الورم الميلانيني إذا كان "
         "p(mel) ≥ {seuil} (نسبة التكلفة R = {R})."),
-    "note_origine": ("Seuils d'origine du modèle, calibrés sur le jeu de calibration HAM10000.",
-                     "Original model thresholds, calibrated on the HAM10000 calibration set.",
-                     "عتبات النموذج الأصلية، معايَرة على مجموعة المعايرة من HAM10000."),
+    "note_origine": ("Seuils d'origine du modèle, calibrés sur son jeu de calibration.",
+                     "Original model thresholds, calibrated on its calibration set.",
+                     "عتبات النموذج الأصلية، معايَرة على مجموعة المعايرة الخاصة به."),
     "note_locale": ("Seuils recalibrés sur les cas validés de l'établissement (proposition n° {id}).",
                     "Thresholds recalibrated on this facility's validated cases (proposal #{id}).",
                     "عتبات أُعيدت معايرتها على الحالات المُصادَق عليها في المؤسسة (الاقتراح رقم {id})."),

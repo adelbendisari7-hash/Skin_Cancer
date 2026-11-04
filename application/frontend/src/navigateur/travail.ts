@@ -2,14 +2,16 @@
 // L'image reste dans ce fil : aucune requête réseau ne la transporte.
 import * as ort from 'onnxruntime-web/wasm'
 import { mesurer, superposition } from './abcd'
-import { decoder, redimensionner, reduire, superposerCarte, versJpeg, type ImageRGB } from './image'
+import { decoder, recadrer, redimensionner, reduire, superposerCarte, versJpeg, zoneUtile, type Cadre, type ImageRGB, type RegleRecadrage } from './image'
 
 interface Reseau { tronc: { fichier: string; sha256: string; octets: number }; tete: { fichier: string; sha256: string; octets: number } }
 interface ProfilConfig { thresholds: Record<string, number>; conformal_q: number[]; reseaux: Reseau[] }
 interface Config {
   nom: string; version: string; taille: number; moyenne: number[]; ecart_type: number[]; classes: string[]; mel: number
+  recadrage?: RegleRecadrage
   classes_malignes: string[]; rapport_defaut: number
-  encodeur: { age_mediane: number; age_moyenne: number; age_ecart_type: number; sexes: string[]; localisations: string[] }
+  encodeur: { age_mediane: number; age_moyenne: number; age_ecart_type: number; sexes: string[]; localisations: string[]
+    correspondance?: Record<string, string> }
   profils: Record<string, ProfilConfig>
   hors_sujet: { seuil: number; profil: string; couches: { etage: number; dim: number }[]; n_classes: number; octets: number
     normalisation: { moyenne: number[]; ecart_type: number[] } }
@@ -94,22 +96,31 @@ async function chargerHorsSujet(id: number): Promise<void> {
   })
 }
 
+/** Localisation détaillée de l'interface → zone vue par le réseau (paquet v3) ; « unknown » si non reconnue. */
+function zone(c: Config, localisation: string | null): string {
+  const z = localisation ? c.encodeur.correspondance?.[localisation] ?? localisation : 'unknown'
+  return c.encodeur.localisations.includes(z) ? z : 'unknown'
+}
+
 function encoderContexte(c: Config, ctx: Contexte): Float32Array {
   const e = c.encodeur
   const manquant = ctx.age === null || ctx.age === undefined
   const age = ((manquant ? e.age_mediane : Number(ctx.age)) - e.age_moyenne) / e.age_ecart_type
   const sexe = ctx.sexe && e.sexes.includes(ctx.sexe) ? ctx.sexe : 'unknown'
-  const loc = ctx.localisation && e.localisations.includes(ctx.localisation) ? ctx.localisation : 'unknown'
+  const loc = zone(c, ctx.localisation)
   return Float32Array.from([age, manquant ? 1 : 0, ...e.sexes.map((s) => (s === sexe ? 1 : 0)), ...e.localisations.map((l) => (l === loc ? 1 : 0))])
 }
 
 const estComplet = (ctx: Contexte) => ctx.age !== null && ctx.age !== undefined && !!ctx.sexe && ctx.sexe !== 'unknown'
   && !!ctx.localisation && ctx.localisation !== 'unknown'
 
-/** Lot des 4 retournements (identité, horizontal, vertical, les deux), normalisé ImageNet. */
-function preparerLot(c: Config, im: ImageRGB): ort.Tensor {
+const cadreAnalyse = (c: Config, im: ImageRGB): Cadre | null => (c.recadrage ? zoneUtile(im, c.recadrage) : null)
+
+/** Lot des 4 retournements (identité, horizontal, vertical, les deux), normalisé ImageNet, après recadrage éventuel. */
+function preparerLot(c: Config, im: ImageRGB, cadre: Cadre | null = cadreAnalyse(c, im)): ort.Tensor {
   const T = c.taille
-  const px = redimensionner(im.pixels, im.largeur, im.hauteur, T, T)
+  const vue = cadre ? recadrer(im, cadre) : im
+  const px = redimensionner(vue.pixels, vue.largeur, vue.hauteur, T, T)
   const d = new Float32Array(4 * 3 * T * T)
   for (let v = 0; v < 4; v++) {
     const fh = v === 1 || v === 3, fv = v === 2 || v === 3
@@ -189,7 +200,8 @@ async function analyser(id: number, fichier: Blob, ctx: Contexte, rapport: numbe
   const t0 = performance.now()
   const im = await decoder(fichier)
   if (Math.min(im.largeur, im.hauteur) < 64) throw Object.assign(new Error('trop_petite'), { code: 'trop_petite' })
-  const lot = preparerLot(c, im)
+  const cadre = cadreAnalyse(c, im)
+  const lot = preparerLot(c, im, cadre)
   const K = c.classes.length
   const z = encoderContexte(c, ctx)
   const contexte = new ort.Tensor('float32', new Float32Array(z.length * 4).map((_, i) => z[i % z.length]), [4, z.length])
@@ -250,8 +262,10 @@ async function analyser(id: number, fichier: Blob, ctx: Contexte, rapport: numbe
   const T = c.taille
   const cam = carteFinale(carte, H, T)
   const base = reduire(im, 640)
+  const ex = base.largeur / im.largeur, ey = base.hauteur / im.hauteur
+  const cadreBase: Cadre | null = cadre && [Math.round(cadre[0] * ex), Math.round(cadre[1] * ey), Math.round(cadre[2] * ex), Math.round(cadre[3] * ey)]
   const { mesure, geo } = mesurer(im, c.seuils_abcd, null)
-  const [image, gradcam, abcd] = await Promise.all([versJpeg(base), versJpeg(superposerCarte(base, cam, T)),
+  const [image, gradcam, abcd] = await Promise.all([versJpeg(base), versJpeg(superposerCarte(base, cam, T, 0.45, cadreBase)),
     geo ? superposition(base, geo) : versJpeg(base)])
   derniere = { cle, cartes: memo, profil, ctx }
   return {
@@ -286,7 +300,7 @@ async function etSi(id: number, fichier: Blob, ctx: Contexte, variable: 'age' | 
     }
     serie.push({ valeur: v, p_melanome: somme[c.mel] / (4 * sessions[profil].length) })
   }
-  return { variable, actuel: variable === 'age' ? ctx.age : ctx.localisation, serie, seuil_melanome: c.profils[profil].thresholds[String(c.rapport_defaut)] }
+  return { variable, actuel: variable === 'age' ? ctx.age : zone(c, ctx.localisation), serie, seuil_melanome: c.profils[profil].thresholds[String(c.rapport_defaut)] }
 }
 
 // Les fils internes d'ONNX Runtime rechargent ce même fichier : ils gardent leur propre gestionnaire de messages.

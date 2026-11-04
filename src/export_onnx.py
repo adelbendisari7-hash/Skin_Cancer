@@ -1,4 +1,4 @@
-"""Exporte le paquet de modèle v2 pour l'analyse DANS LE NAVIGATEUR (ONNX Runtime Web).
+"""Exporte le paquet de modèle de l'application (v3 depuis le 4 novembre 2026) pour l'analyse DANS LE NAVIGATEUR (ONNX Runtime Web).
 
 Chaque réseau est coupé en deux graphes :
 - tronc : image → carte de caractéristiques finale (avant FiLM) + moyennes de chaque étape (détecteur hors sujet) ;
@@ -26,13 +26,13 @@ from onnx import TensorProto, helper, numpy_helper
 from PIL import Image
 
 from . import config as C
-from .data import get_split
+from .donnees_v3 import get_split_v3
 
 APP = C.PROJECT_DIR / "application"
 sys.path.insert(0, str(APP / "backend"))
 from dermia.engine import Contexte, Moteur  # noqa: E402
 
-BUNDLE = APP / "modeles" / "ham10000-m5-v2"
+BUNDLE = APP / "modeles" / "ham10000-bcn20000-m5-v3"
 SORTIE = APP / "frontend" / "demo-statique" / "modele"
 OPSET = 18
 
@@ -110,7 +110,8 @@ def verifier(moteur: Moteur, df) -> None:
     sessions = {p: [(ort.InferenceSession(str(SORTIE / f"{p}_s{s}_tronc.onnx"), opt, providers=["CPUExecutionProvider"]),
                      ort.InferenceSession(str(SORTIE / f"{p}_s{s}_tete.onnx"), opt, providers=["CPUExecutionProvider"]))
                     for s in C.TRAIN_SEEDS] for p in ("complet", "sans_contexte")}
-    cas = df[(df.split == "test") & df.age.notna() & (df.sex != "unknown") & (df.localization != "unknown")].iloc[:24]
+    complet = df[(df.split == "test") & df.age.notna() & (df.sex != "unknown") & (df.localization != "unknown")]
+    cas = complet.groupby("source").head(12)               # HAM10000 et BCN20000 (images recadrées comprises)
     ecart_max = 0.0
     for _, r in cas.iterrows():
         im = Image.open(r.path).convert("RGB")
@@ -159,6 +160,7 @@ def main() -> None:
     seuils_abcd = json.loads((APP / "backend" / "dermia" / "engine" / "seuils_abcd.json").read_text(encoding="utf-8"))
     config = {
         "nom": m["nom"], "version": m["version"], "taille": taille, "moyenne": m["pretraitement"]["moyenne"],
+        "recadrage": m["pretraitement"].get("recadrage"),
         "ecart_type": m["pretraitement"]["ecart_type"], "classes": m["classes"], "mel": m["indice_melanome"],
         "classes_malignes": m["classes_malignes"], "encodeur": m["encodeur_clinique"],
         "rapport_defaut": m["decision"]["rapport_defaut"], "rapports_cout": m["decision"]["rapports_cout"],
@@ -169,7 +171,7 @@ def main() -> None:
         "seuils_abcd": seuils_abcd,
     }
     (SORTIE / "config.json").write_text(json.dumps(config, ensure_ascii=False), encoding="utf-8")
-    verifier(moteur, get_split())
+    verifier(moteur, get_split_v3())
     total = sum(f.stat().st_size for f in SORTIE.iterdir()) / 1e6
     print(f"Modèle pour le navigateur : {SORTIE} — {total:.1f} Mo")
 
