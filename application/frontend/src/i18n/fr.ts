@@ -166,7 +166,7 @@ export const fr = {
   'corps.dos': 'Dos',
 
   // ---- file de travail
-  'accueil.bonjour': 'Bonjour {nom}. Les analyses à valider, les plus graves en premier.',
+  'accueil.sousTitre': 'Analyses à valider, les plus graves en premier',
   'accueil.aValider': 'À valider ({n})',
   'accueil.videTitre': 'Aucune analyse en attente',
   'accueil.videTexte': 'Toutes les analyses ont été validées. Les nouvelles analyses apparaîtront ici, les suspicions de mélanome en tête.',

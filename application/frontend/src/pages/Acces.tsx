@@ -42,11 +42,11 @@ function Presentation({ produit }: { produit?: string }) {
 
       <div className="relative flex items-center gap-3 px-14 pt-11">
         <Signe taille={32} />
-        <span className="text-[18px] font-bold">{produit}</span>
+        <span className="text-[18px] font-semibold">{produit}</span>
       </div>
 
       <div className="relative my-auto max-w-[560px] px-14 py-10">
-        <h2 className="text-[34px] leading-[1.15] font-bold text-white text-balance">{t('acces.panneauTitre')}</h2>
+        <h2 className="text-[34px] leading-[1.15] font-semibold text-white text-balance">{t('acces.panneauTitre')}</h2>
         <p className="mt-4 text-[16px] leading-relaxed text-white/80">{t('acces.panneauTexte')}</p>
         <ul className="mt-10 flex flex-col gap-6">
           {ENGAGEMENTS.map(({ icone: I, titre, texte }) => (
@@ -55,8 +55,8 @@ function Presentation({ produit }: { produit?: string }) {
                 <I className="size-5" aria-hidden />
               </span>
               <div>
-                <p className="text-[15.5px] font-semibold">{t(titre)}</p>
-                <p className="mt-0.5 text-[14.5px] leading-relaxed text-white/75">{t(texte)}</p>
+                <p className="text-[16px] font-semibold">{t(titre)}</p>
+                <p className="mt-0.5 text-[14px] leading-relaxed text-white/75">{t(texte)}</p>
               </div>
             </li>
           ))}
@@ -81,7 +81,7 @@ function Cadre({ titre, intro, children }: { titre: string; intro: ReactNode; ch
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="lg:hidden"><Signe taille={30} /></span>
             <div className="min-w-0 leading-tight">
-              <p className="truncate text-[15px] font-bold lg:hidden">{etat?.produit}</p>
+              <p className="truncate text-[15px] font-semibold lg:hidden">{etat?.produit}</p>
               {etablissement && <p className="truncate text-[14px] text-encre-2">{etablissement}</p>}
             </div>
           </div>
@@ -89,12 +89,12 @@ function Cadre({ titre, intro, children }: { titre: string; intro: ReactNode; ch
         </div>
 
         <div className="mx-auto my-auto w-full max-w-[400px] py-10">
-          <h1 className="text-[30px] leading-tight font-bold">{titre}</h1>
+          <h1 className="text-[30px] leading-tight font-semibold">{titre}</h1>
           <div className="mt-2 mb-8 text-[15px] text-encre-2">{intro}</div>
           {children}
         </div>
 
-        <footer className="text-[12.5px] leading-relaxed text-encre-3">
+        <footer className="text-[12px] leading-relaxed text-encre-3">
           <p>{t('acces.version', { produit: etat?.produit ?? '', v: etat?.version ?? '' })}</p>
           {etat?.modele.charge && <p>{statutModele(etat.modele.statut, etat.modele.statut_i18n)}</p>}
           {DEMO && <p>{t('demo.attribution')}</p>}
@@ -164,7 +164,7 @@ export function Connexion() {
           {(id) => <MotDePasse id={id} value={mdp} onChange={setMdp} autoComplete="current-password" />}
         </Champ>
         <Bouton type="submit" chargement={envoi} className="mt-1 h-11 w-full text-[15px]">{t('acces.seConnecter')}</Bouton>
-        {!DEMO && <p className="text-[13.5px] leading-relaxed text-encre-2">{t('acces.oubli')}</p>}
+        {!DEMO && <p className="text-[13px] leading-relaxed text-encre-2">{t('acces.oubli')}</p>}
       </form>
     </Cadre>
   )

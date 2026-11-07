@@ -69,7 +69,7 @@ export function Patients() {
         <div className="overflow-x-auto rounded-lg border border-trait bg-surface">
           <table className="w-full text-start text-[14px]">
             <thead className="border-b border-trait text-[13px] text-encre-2">
-              <tr><th className="px-4 py-2.5 text-start font-semibold">{t('pat.code')}</th><th className="px-4 text-start font-semibold">{t('pat.dossier')}</th>
+              <tr><th className="px-4 py-3 text-start font-semibold">{t('pat.code')}</th><th className="px-4 text-start font-semibold">{t('pat.dossier')}</th>
                 <th className="px-4 text-start font-semibold">{t('pat.age')}</th><th className="px-4 text-start font-semibold">{t('pat.sexe')}</th>
                 <th className="px-4 text-start font-semibold">{t('pat.analyses')}</th><th className="px-4 text-start font-semibold">{t('pat.derniere')}</th></tr>
             </thead>
@@ -109,7 +109,7 @@ function CarteLesion({ l }: { l: Lesion }) {
         ? <img src={api.imageUrl(l.derniere_image, 'image')} alt="" className="size-16 shrink-0 rounded-full object-cover ring-2 ring-derme" />
         : <span className="size-16 shrink-0 rounded-full bg-trait-2" />}
       <div className="min-w-0">
-        <p className="truncate text-[14.5px] font-semibold">{t('na.lesionN', { n: l.numero })}{l.nom ? ` — ${l.nom}` : ''}</p>
+        <p className="truncate text-[14px] font-semibold">{t('na.lesionN', { n: l.numero })}{l.nom ? ` — ${l.nom}` : ''}</p>
         <p className="truncate text-[13px] text-encre-2">{nomLoc(l.localisation)}{t('commun.liste')}{t('pat.nbImages', { n: l.nb_analyses })}</p>
         <p className="truncate text-[13px] text-encre-2">{date(l.derniere_analyse)}</p>
         <div className="mt-1 flex flex-wrap gap-1.5">
@@ -149,7 +149,7 @@ export function PatientDetail() {
           <Bouton variante="secondaire" onClick={() => setEdition(true)}>{t('pat.modifier')}</Bouton>
           <Link to={`/analyses/nouvelle?patient=${p.id}`}><Bouton icone={<ScanSearch className="size-4" aria-hidden />}>{t('nav.nouvelleAnalyse')}</Bouton></Link>
         </>} />
-      {p.notes && <p className="mb-6 max-w-prose text-[14.5px] text-encre-2">{p.notes}</p>}
+      {p.notes && <p className="mb-6 max-w-prose text-[14px] text-encre-2">{p.notes}</p>}
       <Panneau titre={t('pat.lesions', { n: lesions.length })}>
         {lesions.length === 0 ? (
           <Vide titre={t('pat.aucuneAnalyse')} action={<Link to={`/analyses/nouvelle?patient=${p.id}`} className="font-semibold text-bloc hover:underline">{t('pat.analyserLesion')}</Link>} />
@@ -164,7 +164,7 @@ export function PatientDetail() {
           <ul className="-mx-5 divide-y divide-trait-2">
             {analyses.map((a) => (
               <li key={a.id}>
-                <Link to={`/analyses/${a.id}`} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 py-2.5 hover:bg-porcelaine">
+                <Link to={`/analyses/${a.id}`} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 hover:bg-porcelaine">
                   <img src={api.imageUrl(a.id, 'image')} alt="" className="size-10 rounded-full object-cover ring-2 ring-derme" />
                   <div className="min-w-0">
                     <p className="truncate text-[14px] font-semibold">
@@ -223,7 +223,7 @@ export function Analyses() {
         <div className="overflow-x-auto rounded-lg border border-trait bg-surface">
           <table className="w-full text-start text-[14px]">
             <thead className="border-b border-trait text-[13px] text-encre-2">
-              <tr><th className="px-4 py-2.5 text-start font-semibold">{t('an.date')}</th><th className="px-4 text-start font-semibold">{t('an.patient')}</th>
+              <tr><th className="px-4 py-3 text-start font-semibold">{t('an.date')}</th><th className="px-4 text-start font-semibold">{t('an.patient')}</th>
                 <th className="px-4 text-start font-semibold">{t('an.localisation')}</th><th className="px-4 text-start font-semibold">{t('an.orientation')}</th>
                 <th className="px-4 text-start font-semibold">{t('an.proposition')}</th><th className="px-4 text-start font-semibold">{t('an.validation')}</th></tr>
             </thead>

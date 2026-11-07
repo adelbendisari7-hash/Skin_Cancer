@@ -14,7 +14,7 @@ export function Statut({ niveau, taille = 'normale' }: { niveau: Niveau; taille?
   const petite = taille === 'petite'
   return (
     <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-[4px] font-semibold ${n.fond} ${n.texte}
-      ${petite ? 'px-1.5 py-0.5 text-[12.5px]' : 'px-2 py-1 text-[13.5px]'}`}>
+      ${petite ? 'px-1.5 py-0.5 text-[12px]' : 'px-2 py-1 text-[13px]'}`}>
       <Icone className={petite ? 'size-3.5' : 'size-4'} aria-hidden /> {nomNiveau(niveau)}
     </span>
   )
@@ -53,7 +53,7 @@ export function Oculaire({ image, carte, abcd, taille = 360, legendeCarte, legen
         </div>
       </div>
       {vues.length > 1 && (
-        <div role="group" aria-label={t('oculaire.affichage')} className="inline-flex flex-wrap justify-center rounded-[5px] border border-trait bg-surface p-0.5 text-[13.5px]">
+        <div role="group" aria-label={t('oculaire.affichage')} className="inline-flex flex-wrap justify-center rounded-[5px] border border-trait bg-surface p-0.5 text-[13px]">
           {vues.map((v) => (
             <button key={v} onClick={() => setVue(v)} aria-pressed={vue === v}
               className={`rounded-[4px] px-3 py-1.5 font-semibold ${vue === v ? 'bg-bloc text-white' : 'text-encre-2 hover:text-encre'}`}>
@@ -82,7 +82,7 @@ export function Probabilites({ probabilites, decision, ensemble, seuilMel }:
         return (
           <div key={c} role="listitem" className="grid grid-cols-[1fr_4.2rem] items-center gap-x-3 gap-y-1 sm:grid-cols-[minmax(0,11.5rem)_1fr_4.2rem]">
             <div className="col-span-2 min-w-0 text-[14px] leading-tight sm:col-span-1">
-              <span className={estDecision ? 'font-bold' : ''}>{nomClasse(c)}</span>
+              <span className={estDecision ? 'font-semibold' : ''}>{nomClasse(c)}</span>
               {dansEnsemble && <span className="block text-[12px] text-bloc">{t('probas.dansEnsemble')}</span>}
             </div>
             <div className="relative h-[10px] rounded-[3px] bg-trait-2">
@@ -97,7 +97,7 @@ export function Probabilites({ probabilites, decision, ensemble, seuilMel }:
           </div>
         )
       })}
-      <p className="mt-1 flex items-center gap-2 text-[12.5px] text-encre-2">
+      <p className="mt-1 flex items-center gap-2 text-[12px] text-encre-2">
         <span className="inline-block h-3 w-[2px] shrink-0 bg-urgent" aria-hidden />
         {t('probas.seuilLegende', { seuil: pourcent(seuilMel, 0) })}
       </p>
@@ -113,7 +113,7 @@ export function Avertissements({ liste: avs }: { liste: Avertissement[] }) {
     const k = `av.${av.code}`
     return estCle(k) ? [t(k, { largeur: av.largeur ?? '', hauteur: av.hauteur ?? '' })] : []
   })
-  return <>{textes.map((x) => <p key={x} className="mt-2 text-[13.5px] text-avis">{x}</p>)}</>
+  return <>{textes.map((x) => <p key={x} className="mt-2 text-[13px] text-avis">{x}</p>)}</>
 }
 
 function Pastilles({ couleurs }: { couleurs: string[] }) {
@@ -151,25 +151,25 @@ export function CriteresABCD({ m }: { m: MesureABCD }) {
       <dl className="flex flex-col gap-3">
         {lignes.map(([k, nom, detail, part]) => (
           <div key={k} className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-start gap-x-3">
-            <dt className="grid size-8 place-items-center rounded-full bg-bloc-pale text-[15px] font-bold text-bloc-fonce" aria-hidden>{k}</dt>
+            <dt className="grid size-8 place-items-center rounded-full bg-bloc-pale text-[15px] font-semibold text-bloc-fonce" aria-hidden>{k}</dt>
             <div className="min-w-0">
-              <p className="text-[14.5px] font-semibold">{nom}</p>
-              <dd className="text-[13.5px] text-encre-2">{detail}</dd>
+              <p className="text-[14px] font-semibold">{nom}</p>
+              <dd className="text-[13px] text-encre-2">{detail}</dd>
               {part !== null && (
                 <div className="mt-1.5 h-[6px] max-w-[220px] rounded-[3px] bg-trait-2" aria-hidden>
                   <div className="h-full rounded-[3px] bg-encre-3/70" style={{ width: `${Math.max(part * 100, 2)}%` }} />
                 </div>
               )}
             </div>
-            <span className="chiffres pt-0.5 text-[15px] font-bold" dir="ltr">{valeur(k)}</span>
+            <span className="chiffres pt-0.5 text-[15px] font-semibold" dir="ltr">{valeur(k)}</span>
           </div>
         ))}
       </dl>
       {m.alertes.map((a) => {
         const k = `abcd.${a}`
-        return estCle(k) ? <p key={a} className="mt-3 text-[13.5px] text-avis">{t(k)}</p> : null
+        return estCle(k) ? <p key={a} className="mt-3 text-[13px] text-avis">{t(k)}</p> : null
       })}
-      <p className="mt-3 text-[12.5px] text-encre-2">{t('abcd.note')}</p>
+      <p className="mt-3 text-[12px] text-encre-2">{t('abcd.note')}</p>
     </div>
   )
 }
@@ -192,7 +192,7 @@ export function PanneauEvolution({ evo, lesionId, analyseId }: { evo: Evolution;
         {t('evo.depuis', { date: date(evo.depuis), jours: t('commun.jours', { n: evo.jours ?? '?' }) })}
       </p>
       <SignauxEvolution evo={evo} />
-      <p className="text-[12.5px] text-encre-2">{t('evo.note')}</p>
+      <p className="text-[12px] text-encre-2">{t('evo.note')}</p>
       <Link to={`/lesions/${lesionId}?a=${evo.analyse_precedente}&b=${analyseId}`} className="self-start font-semibold text-bloc hover:underline">
         {t('evo.comparer')}
       </Link>

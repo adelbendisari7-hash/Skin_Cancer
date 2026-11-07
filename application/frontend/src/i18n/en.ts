@@ -160,7 +160,7 @@ export const en: Record<Cle, string> = {
   'corps.face': 'Front',
   'corps.dos': 'Back',
 
-  'accueil.bonjour': 'Hello {nom}. Analyses awaiting review, most serious first.',
+  'accueil.sousTitre': 'Analyses awaiting review, most serious first',
   'accueil.aValider': 'To review ({n})',
   'accueil.videTitre': 'No analysis awaiting review',
   'accueil.videTexte': 'All analyses have been reviewed. New analyses will appear here, suspected melanomas first.',

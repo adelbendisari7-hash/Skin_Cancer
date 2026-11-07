@@ -69,21 +69,21 @@ export function Modele() {
       <EnTete titre={t('nav.modele')} sousTitre={t('mod.sousTitre', {
         nom: f.nom, version: f.version, date: f.date, materiel: f.peripherique === 'cpu' ? t('mod.processeur') : t('mod.gpu'),
       })} />
-      <div className="mb-6 rounded-lg border-s-4 border-renvoi bg-renvoi-pale px-5 py-4 text-[14.5px] text-renvoi">
-        <p className="font-bold">{statutModele(f.statut, f.statut_i18n)}</p>
+      <div className="mb-6 rounded-lg border-s-4 border-renvoi bg-renvoi-pale px-5 py-4 text-[14px] text-renvoi">
+        <p className="font-semibold">{statutModele(f.statut, f.statut_i18n)}</p>
         <p className="mt-1">{tx('consequence', f.donnees_entrainement.consequence)}</p>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <Panneau titre={t('mod.ceQueFait')}>
-          <p className="text-[14.5px]">{tx('description', f.description)}</p>
-          <p className="mt-3 text-[14.5px]"><b>{t('mod.usage')}</b> {tx('usage_prevu', f.usage_prevu)}</p>
-          <p className="mt-3 text-[14.5px]"><b>{t('mod.diagnostics')}</b> {liste(f.classes.map(nomClasse))}.{' '}
+          <p className="text-[14px]">{tx('description', f.description)}</p>
+          <p className="mt-3 text-[14px]"><b>{t('mod.usage')}</b> {tx('usage_prevu', f.usage_prevu)}</p>
+          <p className="mt-3 text-[14px]"><b>{t('mod.diagnostics')}</b> {liste(f.classes.map(nomClasse))}.{' '}
             {t('mod.malins', { liste: liste(f.classes_malignes.map(nomClasse)) })}</p>
-          <p className="mt-3 text-[14.5px]"><b>{t('mod.architecture')}</b> {t('mod.architectureTexte', {
+          <p className="mt-3 text-[14px]"><b>{t('mod.architecture')}</b> {t('mod.architectureTexte', {
             reseau: RESEAUX[archi] ?? archi, taille: f.pretraitement.taille })}</p>
         </Panneau>
         <Panneau titre={t('mod.donnees')}>
-          <dl className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 text-[14.5px]">
+          <dl className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 text-[14px]">
             <dt className="text-encre-2">{t('mod.jeu')}</dt><dd>{f.donnees_entrainement.jeu}</dd>
             <dt className="text-encre-2">{t('mod.provenance')}</dt><dd>{tx('centres', f.donnees_entrainement.centres)}</dd>
             <dt className="text-encre-2">{t('mod.licence')}</dt><dd>{tx('licence', f.donnees_entrainement.licence)}</dd>
@@ -100,10 +100,10 @@ export function Modele() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Panneau titre={t('mod.regles')}>
-          <p className="text-[14.5px]"><b>{t('mod.prudence')}</b> {t('mod.prudenceTexte', {
+          <p className="text-[14px]"><b>{t('mod.prudence')}</b> {t('mod.prudenceTexte', {
             regle: tx('decision_regle', f.decision.regle), liste: f.decision.rapports_cout.join(', '), defaut: f.decision.rapport_defaut })}</p>
-          <p className="mt-3 text-[14.5px]"><b>{t('mod.abst')}</b> {tx('abstention_methode', f.abstention.methode)}, α = {nombre(f.abstention.alpha, 2)} : {tx('abstention_regle', f.abstention.regle)}.</p>
-          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1 text-[13.5px] text-encre-2">
+          <p className="mt-3 text-[14px]"><b>{t('mod.abst')}</b> {tx('abstention_methode', f.abstention.methode)}, α = {nombre(f.abstention.alpha, 2)} : {tx('abstention_regle', f.abstention.regle)}.</p>
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-5 gap-y-1 text-[13px] text-encre-2">
             {profils.map(([k, p]) => (
               <div key={k} className="contents"><dt>{nomProfil(k)}</dt>
                 <dd>{t('mod.seuilsProfil', { liste: Object.entries(p.thresholds).map(([r, s]) => `R=${r} → ${nombre(s)}`).join(', '), jeu: tx(`calibre_sur_${k}`, p.calibre_sur) })}</dd></div>
@@ -112,16 +112,16 @@ export function Modele() {
         </Panneau>
         <Panneau titre={t('mod.horsSujet')}>
           {f.hors_sujet ? <>
-            <p className="text-[14.5px]">{t('mod.horsSujetTexte')}</p>
+            <p className="text-[14px]">{t('mod.horsSujetTexte')}</p>
             {ev && <ul className="mt-3 flex flex-col gap-1 text-[14px]">
               {ev.rejet_test !== undefined && <li>{t('mod.hs.test', { v: pourcent(ev.rejet_test) })}</li>}
               {ev.rejet_hors_sujet !== undefined && <li>{t('mod.hs.ext', { v: pourcent(ev.rejet_hors_sujet), n: ev.n_hors_sujet ?? '?' })}</li>}
             </ul>}
-          </> : <p className="text-[14.5px] text-encre-2">{t('mod.horsSujetAbsent')}</p>}
+          </> : <p className="text-[14px] text-encre-2">{t('mod.horsSujetAbsent')}</p>}
         </Panneau>
       </div>
       <Panneau titre={t('mod.limites')} className="mt-6">
-        <ul className="flex list-disc flex-col gap-2 ps-5 text-[14.5px]">{limites.map((l) => <li key={l}>{l}</li>)}</ul>
+        <ul className="flex list-disc flex-col gap-2 ps-5 text-[14px]">{limites.map((l) => <li key={l}>{l}</li>)}</ul>
       </Panneau>
       <p className="mt-6 text-[13px] break-all text-encre-2">
         {t('mod.integrite', { liste: profils.flatMap(([, p]) => p.poids.map((w) => w.sha256.slice(0, 16) + '…')).join(' ') })}
@@ -135,13 +135,13 @@ function PerformancesJeu({ mesures, titre, nomProfil, alpha }: {
 }) {
   return (
     <div className="mb-6 last:mb-0">
-      {titre && <h3 className="mb-2 text-[15px] font-bold">{titre}</h3>}
+      {titre && <h3 className="mb-2 text-[15px] font-semibold">{titre}</h3>}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[620px] text-start text-[14px]">
           <thead className="border-b border-trait text-[13px] text-encre-2">
             <tr><th className="py-2 pe-4 text-start font-semibold">{t('mod.mesure')}</th>
               {mesures.map(([k]) => <th key={k} colSpan={2} className="px-4 text-start font-semibold">{nomProfil(k)}</th>)}</tr>
-            <tr className="text-[12.5px]"><th />
+            <tr className="text-[12px]"><th />
               {mesures.map(([k]) => [<th key={k + 'a'} className="px-4 py-1 text-start font-normal">{t('mod.classePlusProbable')}</th>,
                 <th key={k + 'b'} className="px-4 py-1 text-start font-normal">{t('mod.reglePrudence')}</th>])}</tr>
           </thead>
@@ -156,13 +156,13 @@ function PerformancesJeu({ mesures, titre, nomProfil, alpha }: {
           </tbody>
         </table>
       </div>
-      <h3 className="mt-6 mb-2 text-[15px] font-bold">{t('mod.abstention')}</h3>
+      <h3 className="mt-6 mb-2 text-[15px] font-semibold">{t('mod.abstention')}</h3>
       <div className="grid gap-4 sm:grid-cols-2">
         {mesures.map(([k, m]) => {
           const ab = m.abstention
           return (
             <dl key={k} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-[5px] border border-trait-2 px-4 py-3 text-[14px]">
-              <dt className="col-span-2 mb-1 font-bold">{nomProfil(k)}</dt>
+              <dt className="col-span-2 mb-1 font-semibold">{nomProfil(k)}</dt>
               <dt className="text-encre-2">{t('mod.traites')}</dt><dd className="chiffres">{pourcent(ab.taux_traite, 0)}</dd>
               <dt className="text-encre-2">{t('mod.couverture', { c: pourcent(1 - alpha, 0) })}</dt><dd className="chiffres">{pourcent(ab['couverture'], 1)}</dd>
               <dt className="text-encre-2">{t('mod.couvMel')}</dt><dd className="chiffres">{pourcent(ab['couverture mel'], 1)}</dd>

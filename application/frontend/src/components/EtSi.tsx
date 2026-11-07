@@ -84,8 +84,8 @@ function BarresLocalisation({ d }: { d: EtSiReponse }) {
       {lignes.map((s) => {
         const actuelle = s.valeur === d.actuel
         return (
-          <div key={String(s.valeur)} className="grid grid-cols-[10.5rem_1fr_3.8rem] items-center gap-3 text-[13.5px]">
-            <span className={actuelle ? 'font-bold' : 'text-encre-2'}>
+          <div key={String(s.valeur)} className="grid grid-cols-[10.5rem_1fr_3.8rem] items-center gap-3 text-[13px]">
+            <span className={actuelle ? 'font-semibold' : 'text-encre-2'}>
               {nomLoc(String(s.valeur))}{actuelle && t('etsi.actuelle')}
             </span>
             <div className="relative h-[8px] rounded-[3px] bg-trait-2">

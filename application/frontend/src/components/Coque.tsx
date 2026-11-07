@@ -35,7 +35,7 @@ export function Coque() {
   const naviguer = useNavigate()
   const demo = etat?.modele.statut?.startsWith('DÉMONSTRATION')
   const lien = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 rounded-[5px] px-3 py-2 text-[14.5px] font-semibold transition-colors ${isActive
+    `flex items-center gap-3 rounded-[5px] px-3 py-2 text-[14px] font-semibold transition-colors ${isActive
       ? 'bg-bloc-pale text-bloc-fonce' : 'text-encre-2 hover:bg-trait-2 hover:text-encre'}`
 
   return (
@@ -44,8 +44,8 @@ export function Coque() {
         <div className="flex items-center gap-2.5 px-5 pt-5 pb-4">
           <Signe />
           <div className="min-w-0">
-            <p className="truncate text-[16px] font-bold leading-tight">{etat?.produit}</p>
-            <p className="truncate text-[12.5px] text-encre-2">{etat?.etablissement}</p>
+            <p className="truncate text-[16px] font-semibold leading-tight">{etat?.produit}</p>
+            <p className="truncate text-[12px] text-encre-2">{etat?.etablissement}</p>
           </div>
         </div>
         <nav aria-label={t('nav.principale')} className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible">
@@ -64,18 +64,18 @@ export function Coque() {
           </NavLink>
           <ChoixLangue className="shrink-0 self-center lg:hidden" />
           <button onClick={async () => { await deconnecter(); naviguer('/connexion') }}
-            className="flex items-center gap-3 rounded-[5px] px-3 py-2 text-[14.5px] font-semibold whitespace-nowrap text-encre-2 hover:bg-trait-2 lg:hidden">
+            className="flex items-center gap-3 rounded-[5px] px-3 py-2 text-[14px] font-semibold whitespace-nowrap text-encre-2 hover:bg-trait-2 lg:hidden">
             <LogOut className="size-[18px] shrink-0" aria-hidden /> {t('nav.deconnecter')}
           </button>
         </nav>
         <div className="hidden border-t border-trait-2 px-3 py-3 lg:block">
           <div className="px-3 pb-2">
             <p className="truncate text-[14px] font-semibold">{utilisateur?.nom_complet}</p>
-            <p className="text-[12.5px] text-encre-2">{utilisateur?.role === 'admin' ? t('role.admin') : t('role.medecin')}</p>
+            <p className="text-[12px] text-encre-2">{utilisateur?.role === 'admin' ? t('role.admin') : t('role.medecin')}</p>
           </div>
           <NavLink to="/compte" className={lien}><KeyRound className="size-[18px]" aria-hidden /> {t('nav.monCompte')}</NavLink>
           <button onClick={async () => { await deconnecter(); naviguer('/connexion') }}
-            className="flex w-full items-center gap-3 rounded-[5px] px-3 py-2 text-[14.5px] font-semibold text-encre-2 hover:bg-trait-2 hover:text-encre">
+            className="flex w-full items-center gap-3 rounded-[5px] px-3 py-2 text-[14px] font-semibold text-encre-2 hover:bg-trait-2 hover:text-encre">
             <LogOut className="size-[18px]" aria-hidden /> {t('nav.deconnecter')}
           </button>
           <ChoixLangue className="mt-3 ms-3" />

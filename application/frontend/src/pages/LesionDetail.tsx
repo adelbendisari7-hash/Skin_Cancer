@@ -43,12 +43,12 @@ function Courbe({ analyses }: { analyses: Analyse[] }) {
 function Colonne({ titre, a }: { titre: string; a: Analyse }) {
   return (
     <div className="flex min-w-0 flex-col items-center gap-2">
-      <p className="text-[13px] font-bold tracking-wide text-encre-2 uppercase">{titre}</p>
+      <p className="text-[14px] font-semibold text-encre-2">{titre}</p>
       <Oculaire image={api.imageUrl(a.id, 'image')} abcd={a.abcd?.A ? api.imageUrl(a.id, 'abcd') : undefined} taille={300} />
       <p className="text-[14px] font-semibold">{dateHeure(a.cree_le)}</p>
       <Statut niveau={a.niveau} taille="petite" />
       <p className="text-[14px]">{t('les.pmel')} : <b className="chiffres">{pourcent(a.p_melanome)}</b></p>
-      <Link to={`/analyses/${a.id}`} className="text-[13.5px] font-semibold text-bloc hover:underline">{t('les.ouvrir')}</Link>
+      <Link to={`/analyses/${a.id}`} className="text-[13px] font-semibold text-bloc hover:underline">{t('les.ouvrir')}</Link>
     </div>
   )
 }
@@ -136,10 +136,10 @@ export function LesionDetail() {
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <div>
-              <h3 className="mb-2 text-[15px] font-bold">{t('les.signaux')}</h3>
-              <p className="mb-2 text-[13.5px] text-encre-2">{t('evo.depuis', { date: date(avant.cree_le), jours: t('commun.jours', { n: comp.jours ?? '?' }) })}</p>
+              <h3 className="mb-2 text-[15px] font-semibold">{t('les.signaux')}</h3>
+              <p className="mb-2 text-[13px] text-encre-2">{t('evo.depuis', { date: date(avant.cree_le), jours: t('commun.jours', { n: comp.jours ?? '?' }) })}</p>
               <SignauxEvolution evo={comp} />
-              <p className="mt-3 text-[12.5px] text-encre-2">{t('evo.note')}</p>
+              <p className="mt-3 text-[12px] text-encre-2">{t('evo.note')}</p>
             </div>
             <TableauComparaison avant={avant} apres={apres} />
           </div>
@@ -183,7 +183,7 @@ function TableauComparaison({ avant, apres }: { avant: Analyse; apres: Analyse }
           ))}
         </tbody>
       </table>
-      <p className="mt-2 text-[12.5px] text-encre-2">{t('abcd.note')}</p>
+      <p className="mt-2 text-[12px] text-encre-2">{t('abcd.note')}</p>
     </div>
   )
 }

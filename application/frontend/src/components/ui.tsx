@@ -22,7 +22,7 @@ export function Bouton({ variante = 'principal', chargement = false, icone, chil
       ref={ref}
       {...rest}
       disabled={rest.disabled || chargement}
-      className={`inline-flex items-center justify-center gap-2 rounded-[5px] px-3.5 py-2 text-[14px] font-semibold
+      className={`inline-flex items-center justify-center gap-2 rounded-[5px] px-4 py-2 text-[14px] font-semibold
         transition-colors disabled:cursor-not-allowed ${VARIANTES[variante]} ${className}`}
     >
       {chargement ? <LoaderCircle className="size-4 animate-spin" aria-hidden /> : icone}
@@ -54,7 +54,7 @@ export function Message({ type = 'erreur', children }: { type?: 'erreur' | 'info
   const erreur = type === 'erreur'
   return (
     <div role={erreur ? 'alert' : 'status'}
-      className={`flex gap-2.5 rounded-[5px] border px-3 py-2.5 text-[14px] ${erreur
+      className={`flex gap-2.5 rounded-[5px] border px-3 py-3 text-[14px] ${erreur
         ? 'border-urgent/30 bg-urgent-pale text-urgent' : 'border-renvoi/20 bg-renvoi-pale text-renvoi'}`}>
       {erreur ? <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> : <Info className="mt-0.5 size-4 shrink-0" aria-hidden />}
       <div>{children}</div>
@@ -74,7 +74,7 @@ export function EnTete({ titre, sousTitre, actions }: { titre: ReactNode; sousTi
   return (
     <header className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
-        <h1 className="text-[26px] font-bold leading-tight">{titre}</h1>
+        <h1 className="text-[26px] font-semibold leading-tight">{titre}</h1>
         {sousTitre && <div className="mt-1 text-[15px] text-encre-2">{sousTitre}</div>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -86,8 +86,8 @@ export function Panneau({ titre, actions, children, className = '' }: { titre?: 
   return (
     <section className={`rounded-lg border border-trait bg-surface ${className}`}>
       {titre && (
-        <div className="flex items-center justify-between gap-3 border-b border-trait-2 px-5 py-3.5">
-          <h2 className="text-[16px] font-bold">{titre}</h2>
+        <div className="flex items-center justify-between gap-3 border-b border-trait-2 px-5 py-3">
+          <h2 className="text-[16px] font-semibold">{titre}</h2>
           {actions}
         </div>
       )}
@@ -118,8 +118,8 @@ export function Dialogue({ ouvert, titre, onFermer, children }: { ouvert: boolea
     <dialog ref={ref} onClose={onFermer} aria-labelledby="titre-dialogue"
       className="m-auto w-[min(560px,calc(100vw-32px))] rounded-lg border border-trait bg-surface p-0 text-encre
         backdrop:bg-encre/40">
-      <div className="flex items-center justify-between border-b border-trait-2 px-5 py-3.5">
-        <h2 id="titre-dialogue" className="text-[17px] font-bold">{titre}</h2>
+      <div className="flex items-center justify-between border-b border-trait-2 px-5 py-3">
+        <h2 id="titre-dialogue" className="text-[17px] font-semibold">{titre}</h2>
         <button onClick={onFermer} className="rounded p-1 text-encre-2 hover:bg-trait-2" aria-label={t('commun.fermer')}>
           <X className="size-5" aria-hidden />
         </button>
@@ -136,7 +136,7 @@ export function Confirmation({ ouvert, titre, texte, libelle, danger = false, ch
 }) {
   return (
     <Dialogue ouvert={ouvert} titre={titre} onFermer={onFermer}>
-      <div className="text-[14.5px]">{texte}</div>
+      <div className="text-[14px]">{texte}</div>
       <div className="mt-5 flex flex-wrap gap-2">
         <Bouton variante={danger ? 'danger' : 'principal'} chargement={chargement} onClick={onConfirmer}>{libelle}</Bouton>
         <Bouton variante="secondaire" onClick={onFermer}>{t('commun.annuler')}</Bouton>

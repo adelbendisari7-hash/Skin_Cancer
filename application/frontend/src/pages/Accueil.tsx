@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom'
 import { api, type Analyse, type TableauDeBord } from '../api'
 import { Statut } from '../components/metier'
 import { Bouton, Chargement, EnTete, Message, Panneau, Vide } from '../components/ui'
-import { useApp } from '../contexte'
 import { t } from '../i18n'
 import { dateHeure, nomClasse, nomLoc, nomNiveau, ORDRE_NIVEAU, pourcent } from '../lib/format'
 
 export function Accueil() {
-  const { utilisateur } = useApp()
   const [a_revoir, setARevoir] = useState<Analyse[] | null>(null)
   const [tb, setTb] = useState<TableauDeBord | null>(null)
   const [erreur, setErreur] = useState<string | null>(null)
@@ -26,7 +24,7 @@ export function Accueil() {
 
   return (
     <>
-      <EnTete titre={t('nav.fileTravail')} sousTitre={t('accueil.bonjour', { nom: utilisateur?.nom_complet ?? '' })}
+      <EnTete titre={t('nav.fileTravail')} sousTitre={t('accueil.sousTitre')}
         actions={<Link to="/analyses/nouvelle"><Bouton icone={<ScanSearch className="size-4" aria-hidden />}>{t('nav.nouvelleAnalyse')}</Bouton></Link>} />
       {erreur && <Message>{erreur}</Message>}
       {!a_revoir || !tb ? <Chargement /> : (
@@ -51,13 +49,13 @@ export function Accueil() {
                             </span>
                           )}
                         </div>
-                        <p className="mt-0.5 truncate text-[13.5px] text-encre-2">
+                        <p className="mt-0.5 truncate text-[13px] text-encre-2">
                           {a.lesion_numero ? `${t('na.lesionN', { n: a.lesion_numero })}${t('commun.liste')}` : ''}
                           {nomLoc(a.localisation)}{t('commun.liste')}{dateHeure(a.cree_le)}
                         </p>
                       </div>
                       <div className="hidden text-end sm:block">
-                        <p className="text-[12.5px] text-encre-2">{t('accueil.propositionIA')}</p>
+                        <p className="text-[12px] text-encre-2">{t('accueil.propositionIA')}</p>
                         <p className="text-[14px] font-semibold">{nomClasse(a.decision)}</p>
                       </div>
                       <ChevronRight className="size-5 text-encre-3 rtl:rotate-180" aria-hidden />
@@ -78,7 +76,7 @@ export function Accueil() {
                 ] as const).map(([k, v]) => (
                   <div key={k}>
                     <dt className="text-[13px] text-encre-2">{k}</dt>
-                    <dd className="chiffres text-[22px] font-bold">{v}</dd>
+                    <dd className="chiffres text-[22px] font-semibold">{v}</dd>
                   </div>
                 ))}
               </dl>

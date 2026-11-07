@@ -132,7 +132,7 @@ function Journal() {
       {!d ? <Chargement /> : (
         <>
           <div className="overflow-x-auto">
-            <table className="w-full text-start text-[13.5px]">
+            <table className="w-full text-start text-[13px]">
               <thead className="border-b border-trait text-encre-2"><tr><th className="py-2 pe-4 text-start font-semibold">{t('adm.date')}</th>
                 <th className="pe-4 text-start font-semibold">{t('adm.utilisateur')}</th><th className="pe-4 text-start font-semibold">{t('adm.action')}</th>
                 <th className="text-start font-semibold">{t('adm.objet')}</th></tr></thead>
@@ -145,7 +145,7 @@ function Journal() {
               </tbody>
             </table>
           </div>
-          <div className="mt-3 flex items-center gap-3 text-[13.5px]">
+          <div className="mt-3 flex items-center gap-3 text-[13px]">
             <Bouton variante="secondaire" disabled={page === 1} onClick={() => setPage(page - 1)}>{t('adm.plusRecents')}</Bouton>
             <Bouton variante="secondaire" disabled={page * 50 >= d.total} onClick={() => setPage(page + 1)}>{t('adm.plusAnciens')}</Bouton>
             <span className="text-encre-2">{t('adm.entrees', { n: entier(d.total) })}</span>
@@ -171,8 +171,8 @@ function TableauProposition({ c, alpha }: { c: Calibration; alpha: number }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="overflow-x-auto">
-        <table className="w-full max-w-[760px] min-w-[420px] text-start text-[13.5px]">
-          <thead className="border-b border-trait text-[12.5px] text-encre-2">
+        <table className="w-full max-w-[760px] min-w-[420px] text-start text-[13px]">
+          <thead className="border-b border-trait text-[12px] text-encre-2">
             <tr><th className="py-1.5 pe-3 text-start font-semibold">{t('rec.critere')}</th>
               <th className="px-3 text-end font-semibold">{t('rec.avecOrigine')}</th><th className="ps-3 text-end font-semibold">{t('rec.avecRecal')}</th></tr>
           </thead>
@@ -192,13 +192,13 @@ function TableauProposition({ c, alpha }: { c: Calibration; alpha: number }) {
         const ok = r.recommandation.decision === 'appliquer'
         const k = `rec.raison.${r.recommandation.raison}`
         return (
-          <div className={`flex gap-2.5 rounded-[5px] px-3 py-2 text-[13.5px] ${ok ? 'bg-benin-pale text-benin' : 'bg-avis-pale text-avis'}`}>
+          <div className={`flex gap-2.5 rounded-[5px] px-3 py-2 text-[13px] ${ok ? 'bg-benin-pale text-benin' : 'bg-avis-pale text-avis'}`}>
             {ok ? <CircleCheck className="mt-0.5 size-4 shrink-0" aria-hidden /> : <ShieldAlert className="mt-0.5 size-4 shrink-0" aria-hidden />}
             <p><b>{ok ? t('rec.reco.appliquer') : t('rec.reco.conserver')}</b> {estCle(k) ? t(k) : ''}</p>
           </div>
         )
       })()}
-      <p className="text-[12.5px] text-encre-2">{t('rec.noteEstimation')}</p>
+      <p className="text-[12px] text-encre-2">{t('rec.noteEstimation')}</p>
     </div>
   )
 }
@@ -248,7 +248,7 @@ function Recalibrage() {
               icone={<Scale className="size-4" aria-hidden />}>{t('rec.proposer')}</Bouton>}>
             <p className="text-[14px]">{t('rec.valides', { n: p.n_valides, h: p.n_histologie })}</p>
             <p className="mt-2 text-[13px] text-encre-2">{t('rec.parClasse', { min: e.minimum_par_classe })}</p>
-            <ul className="mt-1.5 flex flex-wrap gap-1.5 text-[12.5px]">
+            <ul className="mt-1.5 flex flex-wrap gap-1.5 text-[12px]">
               {CODES_CLASSES.map((k) => {
                 const nk = p.par_classe[k] ?? 0
                 return <li key={k} className={`rounded-[4px] px-2 py-0.5 ${nk >= e.minimum_par_classe ? 'bg-benin-pale text-benin' : 'bg-trait-2 text-encre-2'}`}>
@@ -381,7 +381,7 @@ export function Administration() {
       <div role="tablist" aria-label={t('nav.administration')} className="mb-6 flex gap-1 overflow-x-auto border-b border-trait">
         {ONGLETS.map((o) => (
           <button key={o.id} role="tab" aria-selected={o.id === actif.id} onClick={() => setParams({ onglet: o.id }, { replace: true })}
-            className={`-mb-px border-b-2 px-3.5 py-2 text-[14.5px] font-semibold whitespace-nowrap ${o.id === actif.id
+            className={`-mb-px border-b-2 px-4 py-2 text-[14px] font-semibold whitespace-nowrap ${o.id === actif.id
               ? 'border-bloc text-bloc-fonce' : 'border-transparent text-encre-2 hover:text-encre'}`}>
             {o.libelle()}
           </button>

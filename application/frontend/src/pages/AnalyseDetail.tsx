@@ -19,7 +19,7 @@ function Validation({ a, onMaj }: { a: Analyse; onMaj: (a: Analyse) => void }) {
 
   if (a.revue !== 'en_attente') {
     return (
-      <div className="text-[14.5px]">
+      <div className="text-[14px]">
         <p><b>{a.revue === 'confirmee' ? t('val.confirmee') : t('val.corrigee')}</b> {t('val.par', { qui: a.relecteur ?? '—', date: dateHeure(a.revue_le) })}</p>
         <p className="mt-1">{t('val.diagRetenu')} <b>{nomClasse(a.diagnostic_final)}</b></p>
         {a.histologie && <p className="mt-1 text-bloc-fonce">{t('val.histologie')}</p>}
@@ -41,11 +41,11 @@ function Validation({ a, onMaj }: { a: Analyse; onMaj: (a: Analyse) => void }) {
 
   return (
     <form onSubmit={envoyer} className="flex flex-col gap-4">
-      <p className="text-[14.5px] text-encre-2">{t('val.intro', { classe: nomClasse(a.decision) })}</p>
+      <p className="text-[14px] text-encre-2">{t('val.intro', { classe: nomClasse(a.decision) })}</p>
       <div role="radiogroup" aria-label={t('val.groupe')} className="flex flex-wrap gap-2">
         {([['confirmee', t('val.jeConfirme')], ['corrigee', t('val.jeCorrige')]] as const).map(([v, l]) => (
           <button key={v} type="button" role="radio" aria-checked={mode === v} onClick={() => setMode(v)}
-            className={`rounded-[5px] border px-3.5 py-2 text-[14px] font-semibold ${mode === v ? 'border-bloc bg-bloc-pale text-bloc-fonce' : 'border-trait bg-surface hover:border-encre-3'}`}>
+            className={`rounded-[5px] border px-4 py-2 text-[14px] font-semibold ${mode === v ? 'border-bloc bg-bloc-pale text-bloc-fonce' : 'border-trait bg-surface hover:border-encre-3'}`}>
             {l}
           </button>
         ))}
@@ -93,7 +93,7 @@ function PanneauEtSi({ a }: { a: Analyse }) {
           </button>
         ))}
       </div>}>
-      <p className="mb-3 text-[13.5px] text-encre-2">{t('etsi.intro')}</p>
+      <p className="mb-3 text-[13px] text-encre-2">{t('etsi.intro')}</p>
       {erreur ? <Message>{erreur}</Message> : d[variable] ? <EtSi donnees={d[variable]} /> : <Chargement texte={t('etsi.calcul')} />}
     </Panneau>
   )
@@ -109,7 +109,7 @@ function BoutonPDF({ id }: { id: number }) {
         <Bouton variante="secondaire" icone={<FileDown className="size-4" aria-hidden />} className="h-full rounded-e-none">{t('ad.pdf')}</Bouton>
       </a>
       <select aria-label={t('ad.pdfLangue')} value={langue} onChange={(e) => setLangue(e.target.value as Langue)}
-        className="rounded-e-[5px] border border-s-0 border-trait bg-surface px-2 text-[13.5px] font-semibold text-encre hover:border-encre-3">
+        className="rounded-e-[5px] border border-s-0 border-trait bg-surface px-2 text-[13px] font-semibold text-encre hover:border-encre-3">
         {LANGUES.map((l) => <option key={l.code} value={l.code}>{l.code.toUpperCase()}</option>)}
       </select>
     </div>
@@ -143,7 +143,7 @@ export function AnalyseDetail() {
             {t('commun.liste')}{nomLoc(a.localisation)}{t('commun.liste')}
             {a.age !== null ? t('commun.ans', { n: a.age }) : t('commun.ageNonPrecise')}{t('commun.liste')}{nomSexe(a.sexe).toLowerCase()}
           </p>
-          <h1 className="mt-1 text-[26px] font-bold leading-tight">{t('ad.titre', { date: dateHeure(a.cree_le) })}</h1>
+          <h1 className="mt-1 text-[26px] font-semibold leading-tight">{t('ad.titre', { date: dateHeure(a.cree_le) })}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <BoutonPDF id={a.id} />
@@ -166,7 +166,7 @@ export function AnalyseDetail() {
         <div className="flex min-w-0 flex-col gap-6">
           <section className={`rounded-lg border-s-4 ${n.trait} ${n.fond} px-5 py-4`} aria-live="polite">
             <Statut niveau={a.niveau} />
-            <h2 className={`mt-2 text-[22px] font-bold leading-snug ${n.texte}`}>{titre}</h2>
+            <h2 className={`mt-2 text-[22px] font-semibold leading-snug ${n.texte}`}>{titre}</h2>
             <p className="mt-1 max-w-prose text-[15px]">{message}</p>
             <div className="mt-3 text-[14px] text-encre-2">
               {a.traite
@@ -191,7 +191,7 @@ export function AnalyseDetail() {
         <Panneau titre={t('val.titre')}><Validation a={a} onMaj={setA} /></Panneau>
       </div>
 
-      <details className="mt-8 text-[13.5px] text-encre-2">
+      <details className="mt-8 text-[13px] text-encre-2">
         <summary className="cursor-pointer font-semibold text-encre">{t('det.titre')}</summary>
         <dl className="mt-3 grid max-w-2xl grid-cols-[auto_1fr] gap-x-6 gap-y-1">
           <dt>{t('det.modele')}</dt><dd dir="ltr" className="text-start">{a.modele} v{a.version_modele}</dd>

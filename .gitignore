@@ -22,3 +22,7 @@ resultats/predictions/
 logs/
 .vercel/
 .env*
+
+# Graphe de connaissances local (graphify)
+graphify-out/
+.graphifyignore

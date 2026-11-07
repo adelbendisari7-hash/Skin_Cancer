@@ -1,10 +1,8 @@
 @import "@fontsource/atkinson-hyperlegible-next/400.css";
 @import "@fontsource/atkinson-hyperlegible-next/600.css";
-@import "@fontsource/atkinson-hyperlegible-next/700.css";
 /* Glyphes arabes (interface en arabe) : IBM Plex Sans Arabic, licence OFL, sous-ensemble arabe seulement. */
 @import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
 @import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
-@import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
 @import "tailwindcss";
 
 /*
@@ -54,6 +52,7 @@
   :focus-visible { outline: 2px solid var(--color-bloc); outline-offset: 2px; border-radius: 3px; }
   ::selection { background: var(--color-bloc-pale); }
   .chiffres { font-variant-numeric: tabular-nums; }
+  b, strong, th, summary { font-weight: 600; }
 }
 
 @media (prefers-reduced-motion: reduce) {

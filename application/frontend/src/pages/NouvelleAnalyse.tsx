@@ -17,10 +17,10 @@ let avisAccepte = false        // démonstration : l'avis n'est demandé qu'une 
 function Etape({ n, titre, fait, children }: { n: number; titre: string; fait: boolean; children: ReactNode }) {
   return (
     <section className="grid grid-cols-[32px_1fr] gap-x-4 border-t border-trait py-6 first:border-t-0 first:pt-0">
-      <span aria-hidden className={`grid size-8 place-items-center rounded-full text-[14px] font-bold
+      <span aria-hidden className={`grid size-8 place-items-center rounded-full text-[14px] font-semibold
         ${fait ? 'bg-bloc text-white' : 'border border-trait bg-surface text-encre-2'}`}>{n}</span>
       <div className="min-w-0">
-        <h2 className="mb-3 pt-1 text-[17px] font-bold">{titre}</h2>
+        <h2 className="mb-3 pt-1 text-[17px] font-semibold">{titre}</h2>
         {children}
       </div>
     </section>
@@ -54,8 +54,8 @@ function ChoixPatient({ patient, onChoix }: { patient: Patient | null; onChoix: 
     return (
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-[5px] border border-trait bg-surface px-4 py-3">
         <div>
-          <p className="font-bold">{patient.code}</p>
-          <p className="text-[13.5px] text-encre-2">{details.filter(Boolean).join(t('commun.liste'))}</p>
+          <p className="font-semibold">{patient.code}</p>
+          <p className="text-[13px] text-encre-2">{details.filter(Boolean).join(t('commun.liste'))}</p>
         </div>
         <Bouton variante="discret" onClick={() => onChoix(null)} icone={<X className="size-4" aria-hidden />}>{t('na.changerPatient')}</Bouton>
       </div>
@@ -95,9 +95,9 @@ function ChoixPatient({ patient, onChoix }: { patient: Patient | null; onChoix: 
         <ul className="divide-y divide-trait-2 rounded-[5px] border border-trait bg-surface">
           {resultats.map((p) => (
             <li key={p.id}>
-              <button type="button" onClick={() => onChoix(p)} className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-start hover:bg-porcelaine">
+              <button type="button" onClick={() => onChoix(p)} className="flex w-full items-center justify-between gap-3 px-4 py-3 text-start hover:bg-porcelaine">
                 <span className="font-semibold">{p.code}</span>
-                <span className="text-[13.5px] text-encre-2">
+                <span className="text-[13px] text-encre-2">
                   {[nomSexe(p.sexe), p.annee_naissance ? t('commun.ans', { n: ageDepuis(p.annee_naissance) ?? '' }) : '', p.reference_externe ?? '']
                     .filter(Boolean).join(t('commun.liste'))}
                 </span>
@@ -112,11 +112,11 @@ function ChoixPatient({ patient, onChoix }: { patient: Patient | null; onChoix: 
 
 /** Nouvelle lésion, ou nouvelle image d'une lésion déjà suivie (comparaison automatique avec la précédente). */
 function ChoixLesion({ lesions, choisie, onChoix }: { lesions: Lesion[]; choisie: number | null; onChoix: (l: Lesion | null) => void }) {
-  const carte = (actif: boolean) => `flex w-full items-center gap-3 rounded-[5px] border px-3 py-2.5 text-start
+  const carte = (actif: boolean) => `flex w-full items-center gap-3 rounded-[5px] border px-3 py-3 text-start
     ${actif ? 'border-bloc bg-bloc-pale' : 'border-trait bg-surface hover:border-encre-3'}`
   return (
     <div className="flex flex-col gap-2">
-      <p className="mb-1 max-w-prose text-[13.5px] text-encre-2">{t('na.lesionIntro')}</p>
+      <p className="mb-1 max-w-prose text-[13px] text-encre-2">{t('na.lesionIntro')}</p>
       <div role="radiogroup" aria-label={t('na.etapeLesion')} className="grid gap-2 sm:grid-cols-2">
         <button type="button" role="radio" aria-checked={choisie === null} onClick={() => onChoix(null)} className={carte(choisie === null)}>
           <span className="grid size-11 shrink-0 place-items-center rounded-full border border-dashed border-encre-3/60 text-encre-2"><Plus className="size-5" aria-hidden /></span>
@@ -257,7 +257,7 @@ export function NouvelleAnalyse() {
           <Etape n={3} titre={t('na.etapeImage')} fait={!!fichier}>
             <div onDragOver={(e) => { e.preventDefault(); setSurvol(true) }} onDragLeave={() => setSurvol(false)} onDrop={deposer}
               className={`flex flex-col items-start gap-3 rounded-[5px] border border-dashed px-5 py-5 ${survol ? 'border-bloc bg-bloc-pale' : 'border-encre-3/50 bg-surface'}`}>
-              <p className="text-[14.5px]">{fichier ? <><b>{fichier.name}</b> ({t('commun.mo', { n: nombre(fichier.size / 1e6, 1) })})</> : t('na.deposer')}</p>
+              <p className="text-[14px]">{fichier ? <><b>{fichier.name}</b> ({t('commun.mo', { n: nombre(fichier.size / 1e6, 1) })})</> : t('na.deposer')}</p>
               <input ref={entree} type="file" accept={TYPES.join(',')} className="hidden" onChange={(e) => { choisirFichier(e.target.files?.[0]); e.target.value = '' }} />
               <Bouton type="button" variante="secondaire" onClick={() => entree.current?.click()} icone={<ImagePlus className="size-4" aria-hidden />}>
                 {fichier ? t('na.remplacer') : t('na.choisirImage')}
@@ -266,7 +266,7 @@ export function NouvelleAnalyse() {
             </div>
           </Etape>
           <Etape n={4} titre={t('na.etapeLoc')} fait={!!loc}>
-            {lesion && loc === lesion.localisation && <p className="mb-3 text-[13.5px] text-encre-2">{t('na.locLesion')}</p>}
+            {lesion && loc === lesion.localisation && <p className="mb-3 text-[13px] text-encre-2">{t('na.locLesion')}</p>}
             <CarteCorps valeur={loc} onChange={setLoc} />
             <div className="mx-auto mt-4 max-w-sm">
               <Champ label={t('na.ouListe')}>{(id) => (
@@ -288,7 +288,7 @@ export function NouvelleAnalyse() {
                 </Liste>)}
               </Champ>
             </div>
-            <p className="mt-3 max-w-prose text-[13.5px] text-encre-2">
+            <p className="mt-3 max-w-prose text-[13px] text-encre-2">
               {contexteComplet ? t('na.contexteComplet') : t('na.contexteIncomplet')}
             </p>
           </Etape>
@@ -309,7 +309,7 @@ export function NouvelleAnalyse() {
               <dd className="font-semibold">{age ? t('commun.ans', { n: entier(Number(age)) }) : t('commun.ageNonPrecise')}{t('commun.liste')}{nomSexe(sexe).toLowerCase()}</dd>
             </dl>
             {erreur && <div className="mt-4"><Message>{erreur}</Message></div>}
-            <Bouton ref={depart} type="submit" disabled={!pret} chargement={envoi} className="mt-5 w-full py-2.5">
+            <Bouton ref={depart} type="submit" disabled={!pret} chargement={envoi} className="mt-5 w-full py-3">
               {envoi ? (progres?.etape === 'telechargement'
                 ? t('demo.telechargement', { p: Math.round(progres.part * 100) }) : t('na.enCours')) : t('na.analyser')}
             </Bouton>
@@ -319,7 +319,7 @@ export function NouvelleAnalyse() {
       </form>
 
       <Dialogue ouvert={avis} titre={t('demo.avisTitre')} onFermer={() => setAvis(false)}>
-        <div className="flex flex-col gap-3 text-[14.5px]">
+        <div className="flex flex-col gap-3 text-[14px]">
           <p>{t('demo.avisTexte')}</p>
           <label className="flex items-start gap-2.5 font-semibold">
             <input type="checkbox" checked={compris} onChange={(e) => setCompris(e.target.checked)} className="mt-1 size-4 accent-bloc" />
@@ -334,7 +334,7 @@ export function NouvelleAnalyse() {
       <Dialogue ouvert={horsSujet !== null} titre={t('hs.titre')} onFermer={() => setHorsSujet(null)}>
         <div className="flex gap-3">
           <ImageOff className="mt-0.5 size-6 shrink-0 text-avis" aria-hidden />
-          <div className="text-[14.5px]">
+          <div className="text-[14px]">
             <p>{t('hs.texte')}</p>
             {horsSujet && <p className="mt-2 text-[13px] text-encre-2">{t('hs.score', { score: nombre(horsSujet.score, 1), seuil: nombre(horsSujet.seuil, 1) })}</p>}
           </div>
@@ -344,7 +344,7 @@ export function NouvelleAnalyse() {
             icone={<ImagePlus className="size-4" aria-hidden />}>{t('hs.autre')}</Bouton>
           <Bouton variante="secondaire" onClick={() => void envoyer(true)}>{t('hs.forcer')}</Bouton>
         </div>
-        <p className="mt-3 text-[12.5px] text-encre-2">{t('hs.forcerAide')}</p>
+        <p className="mt-3 text-[12px] text-encre-2">{t('hs.forcerAide')}</p>
       </Dialogue>
     </>
   )
