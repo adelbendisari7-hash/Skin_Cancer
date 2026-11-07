@@ -1,0 +1,14 @@
+{
+ "images": 1270,
+ "lesions": 1191,
+ "patients": 584,
+ "classes": {
+  "nv": 549,
+  "bcc": 228,
+  "mel": 194,
+  "akiec": 157,
+  "bkl": 62,
+  "vasc": 41,
+  "df": 39
+ }
+}
