@@ -80,7 +80,7 @@ Chaque moitié est recalibrée par le code de l'application puis mesurée sur l'
 | Mélanomes classés bénins sans renvoi | 15 | **5** | 24 | **4** | 14 | **6** | **4** | 9 |
 | Couverture conforme (cible 90 %) | 80,6 % | 87,7 % | 79,5 % | 89,7 % | 84,5 % | 89,0 % | 86,8 % | 89,8 % |
 | Part des cas renvoyés | 62 % | 75 % | 62 % | 79 % | 81 % | 89 % | 81 % | 77 % |
-| Recommandation de l'application | | appliquer (2 fois sur 2) | | appliquer (2/2) | | appliquer (2/2) | | **conserver (2/2)** |
+| Recommandation de l'application (sur chaque moitié) | | appliquer | | appliquer | | appliquer | | **conserver** |
 
 Lecture :
 
@@ -89,10 +89,11 @@ Lecture :
 2. **Il ne réduit pas les fausses alertes.** Les deux modèles deviennent plus prudents et renvoient davantage de cas
    (jusqu'à 89 % pour la v3 avec contexte). Seul cas où la spécificité monte : la v3 sans contexte (55 % → 70 %), mais
    au prix de plus de mélanomes manqués (4 → 9).
-3. **La règle de recommandation de l'application a eu raison dans les 8 cas estimables.** Elle recommande d'appliquer
-   quand la sécurité s'améliore, et de conserver les seuils d'origine pour la v3 sans contexte, où le recalibrage
-   l'aurait dégradée. Dans le profil sans contexte de la v3 avec contexte réel (8 cas par moitié), il n'y avait pas assez
-   de cas pour proposer quoi que ce soit.
+3. **La recommandation de l'application va dans le sens du résultat mesuré, dans les quatre configurations.** Elle
+   recommande d'appliquer pour la v2 et pour la v3 avec contexte, où la sécurité mélanome s'améliore. Elle recommande
+   de conserver les seuils d'origine pour la v3 sans contexte, où le recalibrage l'aurait dégradée. Pour la v3 avec
+   contexte réel, les rares cas passés par le profil sans contexte (8 par moitié) étaient trop peu nombreux pour
+   proposer quoi que ce soit.
 4. **Les seuils proposés varient d'une moitié à l'autre** (v3 : 0,01 contre 0,12) : avec 80 à 110 mélanomes, l'estimation
    reste bruitée. Il faut plusieurs centaines de cas validés pour recalibrer.
 5. **Limite de fond.** Trop de cas renvoyés et trop de fausses alertes à Buenos Aires : ce n'est pas un problème de
