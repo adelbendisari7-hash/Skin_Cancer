@@ -1,0 +1,13 @@
+version,contexte,profil,moitie_calibration,n,source_seuil,seuil_mel_origine,seuil_mel_propose,recommandation,raison
+v2,reel,complet,0,414,locale,0.1,0.02,appliquer,gain_securite_melanome
+v2,reel,complet,1,552,locale,0.1,0.07,appliquer,gain_securite_melanome
+v2,reel,sans_contexte,0,131,origine,0.27,0.27,appliquer,couverture_restauree
+v2,reel,sans_contexte,1,173,locale,0.27,0.03,appliquer,gain_securite_melanome
+v2,aucun,sans_contexte,0,545,locale,0.27,0.03,appliquer,gain_securite_melanome
+v2,aucun,sans_contexte,1,725,locale,0.27,0.04,appliquer,gain_securite_melanome
+v3,reel,complet,0,537,locale,0.03,0.01,appliquer,gain_securite_melanome
+v3,reel,complet,1,717,locale,0.03,0.12,appliquer,gain_securite_melanome
+v3,reel,sans_contexte,0,8,origine,0.01,0.01,conserver,estimation_indisponible
+v3,reel,sans_contexte,1,8,origine,0.01,0.01,conserver,estimation_indisponible
+v3,aucun,sans_contexte,0,545,locale,0.01,0.07,conserver,securite_melanome_degradee
+v3,aucun,sans_contexte,1,725,locale,0.01,0.03,conserver,securite_melanome_degradee

@@ -41,3 +41,13 @@ Analyse annexe : sans les 158 images de carcinome épidermoïde invasif, que la 
 
 72 % des nævus n'ont pas de confirmation histologique ; la base compte beaucoup de cancers (sans doute plus qu'en
 consultation courante), ce qui change la valeur prédictive des alertes ; peaux surtout de phototype II et III.
+
+## Ajout du 7 novembre 2026 : recalibrage local (fixé avant le calcul, après la mesure ci-dessus)
+
+Question : le recalibrage local de l'application (`backend/dermia/engine/recalibrage.py`, utilisé sans modification)
+corrige-t-il les seuils dans un nouvel hôpital ? HIBA est coupé en deux moitiés **par patient** (graine 0). Les
+paramètres sont recalibrés sur une moitié (les « cas validés » de l'établissement), profil par profil comme dans
+l'application, puis appliqués à l'autre moitié ; on inverse ensuite les rôles, si bien que chaque image est mesurée
+une fois avec des paramètres qui ne l'ont pas vue. Comparaison avec les paramètres d'origine sur les mêmes images :
+sensibilité et spécificité mélanome, mélanomes classés bénins sans renvoi, part des cas renvoyés, couverture
+conforme. On rapporte aussi ce que l'application aurait recommandé (« appliquer » ou « conserver ») sur chaque moitié.

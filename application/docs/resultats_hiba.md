@@ -65,3 +65,36 @@ avance (AUC macro 0,921 contre 0,881).
 
 Limites : 72 % des nævus de HIBA n'ont pas de confirmation histologique ; la base compte beaucoup de cancers, ce qui
 influe sur la valeur prédictive des alertes ; peaux surtout de phototype II et III.
+
+## Recalibrage local dans ce nouvel hôpital (7 novembre 2026)
+
+Protocole : voir l'ajout de `plan_hiba.md`. Script : `python -m src.recalibrage_hiba`. Tableaux :
+`resultats/tableaux/15_hiba_recalibrage*.csv`. HIBA est coupé en deux moitiés par patient (111 et 83 mélanomes).
+Chaque moitié est recalibrée par le code de l'application puis mesurée sur l'autre moitié.
+
+| | v2 contexte réel | | v2 sans contexte | | v3 contexte réel | | v3 sans contexte | |
+|---|---|---|---|---|---|---|---|---|
+| Paramètres | origine | recalibrés | origine | recalibrés | origine | recalibrés | origine | recalibrés |
+| Sensibilité mélanome | 73,2 % | 86,6 % | 65,5 % | 88,7 % | 90,7 % | 87,1 % | 96,9 % | 91,2 % |
+| Spécificité mélanome | 81,7 % | 57,8 % | 88,9 % | 60,5 % | 54,3 % | 54,3 % | 54,6 % | 69,8 % |
+| Mélanomes classés bénins sans renvoi | 15 | **5** | 24 | **4** | 14 | **6** | **4** | 9 |
+| Couverture conforme (cible 90 %) | 80,6 % | 87,7 % | 79,5 % | 89,7 % | 84,5 % | 89,0 % | 86,8 % | 89,8 % |
+| Part des cas renvoyés | 62 % | 75 % | 62 % | 79 % | 81 % | 89 % | 81 % | 77 % |
+| Recommandation de l'application | | appliquer (2 fois sur 2) | | appliquer (2/2) | | appliquer (2/2) | | **conserver (2/2)** |
+
+Lecture :
+
+1. **Le recalibrage rend l'outil plus sûr dans un nouvel hôpital.** Les mélanomes classés bénins sans renvoi passent
+   de 15 à 5 (v2), de 24 à 4 (v2 sans contexte) et de 14 à 6 (v3). La couverture conforme remonte vers les 90 % promis.
+2. **Il ne réduit pas les fausses alertes.** Les deux modèles deviennent plus prudents et renvoient davantage de cas
+   (jusqu'à 89 % pour la v3 avec contexte). Seul cas où la spécificité monte : la v3 sans contexte (55 % → 70 %), mais
+   au prix de plus de mélanomes manqués (4 → 9).
+3. **La règle de recommandation de l'application a eu raison dans les 8 cas estimables.** Elle recommande d'appliquer
+   quand la sécurité s'améliore, et de conserver les seuils d'origine pour la v3 sans contexte, où le recalibrage
+   l'aurait dégradée. Dans le profil sans contexte de la v3 avec contexte réel (8 cas par moitié), il n'y avait pas assez
+   de cas pour proposer quoi que ce soit.
+4. **Les seuils proposés varient d'une moitié à l'autre** (v3 : 0,01 contre 0,12) : avec 80 à 110 mélanomes, l'estimation
+   reste bruitée. Il faut plusieurs centaines de cas validés pour recalibrer.
+5. **Limite de fond.** Trop de cas renvoyés et trop de fausses alertes à Buenos Aires : ce n'est pas un problème de
+   seuils, c'est la capacité du réseau à distinguer les lésions dans ces images (AUC mélanome 0,87–0,90). Seul un
+   réentraînement avec des images d'hôpitaux plus variés peut améliorer cela.
